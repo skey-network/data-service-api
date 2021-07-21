@@ -4,8 +4,6 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN yarn
-
 # # Hacks to fix type errors
 # # https://github.com/apollographql/apollo-server/issues/3339
 # RUN yarn remove @nestjs/graphql graphql-tools graphql apollo-server-express
