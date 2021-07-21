@@ -1204,7 +1204,7 @@
     webpack "5.43.0"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^8.0.0":
+"@nestjs/common@^8.0.2":
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-8.0.4.tgz#00e801dfcfad4c4e0445b925a61cf6047285acb6"
   integrity sha512-qgQTHH+0y64btdnqSuQSo8Ou7Okb6+8l2StjDOlzaPK36Ln1uBLoa6jQnwqxlAHUHqEocmraL1V5+wnSYz2CRA==
@@ -1214,7 +1214,7 @@
     tslib "2.3.0"
     uuid "8.3.2"
 
-"@nestjs/core@^8.0.0":
+"@nestjs/core@^8.0.2":
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-8.0.4.tgz#fcef4fa0f62f8b205f6e741bf6cd2da01c94d98a"
   integrity sha512-1clCaGtVZTE7/tEvVj1FLwgFTHIlaCvwfPSMgxhGalTrx+cM8MoqEGLWklqS5bS+YfQscI1+Gn3OLdWlRcGbRQ==
@@ -1254,7 +1254,7 @@
   resolved "https://registry.yarnpkg.com/@nestjs/mongoose/-/mongoose-8.0.0.tgz#5771d62a96b63ae44ee5a321d67a658bc3381fd8"
   integrity sha512-G0Jag+L3lJjdLrStjfkY+24Ir9CJiu4IgrOKdqx2gsVDgOx22y9/NSuH8c/UqmCijQK8nKtiz1qgPRhP5ezUEw==
 
-"@nestjs/platform-express@^8.0.0":
+"@nestjs/platform-express@^8.0.2":
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-8.0.4.tgz#506e58fa5b888be3d5006b069ab7099048ad93f0"
   integrity sha512-qndJl/PsXArtuc/aguFrGrF9EIzyPX9kthKTAPXlqjtBMuApXupghG9T+QowSlPIppp52wRG6WAdJt0IQA9o/A==
@@ -2192,7 +2192,7 @@ apollo-server-caching@^0.7.0:
   dependencies:
     lru-cache "^6.0.0"
 
-apollo-server-core@^2.25.2:
+apollo-server-core@^2.22.2, apollo-server-core@^2.25.2:
   version "2.25.2"
   resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-2.25.2.tgz#ff65da5e512d9b5ca54c8e5e8c78ee28b5987247"
   integrity sha512-lrohEjde2TmmDTO7FlOs8x5QQbAS0Sd3/t0TaK2TWaodfzi92QAvIsq321Mol6p6oEqmjm8POIDHW1EuJd7XMA==
@@ -2236,7 +2236,7 @@ apollo-server-errors@^2.5.0:
   resolved "https://registry.yarnpkg.com/apollo-server-errors/-/apollo-server-errors-2.5.0.tgz#5d1024117c7496a2979e3e34908b5685fe112b68"
   integrity sha512-lO5oTjgiC3vlVg2RKr3RiXIIQ5pGXBFxYGGUkKDhTud3jMIhs+gel8L8zsEjKaKxkjHhCQAA/bcEfYiKkGQIvA==
 
-apollo-server-express@^2.25.2:
+apollo-server-express@^2.22.2:
   version "2.25.2"
   resolved "https://registry.yarnpkg.com/apollo-server-express/-/apollo-server-express-2.25.2.tgz#58cd819694ff4c2dec6945a95c5dff6aa2719ef6"
   integrity sha512-A2gF2e85vvDugPlajbhr0A14cDFDIGX0mteNOJ8P3Z3cIM0D4hwrWxJidI+SzobefDIyIHu1dynFedJVhV0euQ==
