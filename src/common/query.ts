@@ -1,17 +1,42 @@
-import { Model, Document } from 'mongoose'
 import { CommonIndexArgs } from './common.args'
 
-export const indexQuery = <T extends Document, Y extends CommonIndexArgs>(
-  model: Model<T>,
-  filterFields: readonly string[],
-  args: Y
-) => {
-  const query = Object.entries(args)
-    .filter(([key, value]) => filterFields.includes(key) && value !== undefined)
-    .map(([key, value]) => ({ [key]: value }))
-    .reduce((prev, acc) => ({ ...acc, ...prev }), {} as any)
-
-  const sort = args.orderBy ? { [args.orderBy]: args.order } : undefined
-
-  return model.find(query).sort(sort).skip(args.skip).limit(args.take)
+export interface FilterField {
+  field: string
+  value: any
 }
+
+export const getFilterFields = <T extends CommonIndexArgs>(
+  args: T,
+  whitelist: readonly string[]
+): FilterField[] =>
+  Object.entries(args)
+    .filter(([key, value]) => whitelist.includes(key) && value !== undefined)
+    .map(([key, value]) => ({ field: key, value }))
+
+export const filterPipeline = <T extends CommonIndexArgs>(
+  args: T,
+  whitelist: readonly string[]
+) =>
+  getFilterFields(args, whitelist).map((f) => ({ $match: { [f.field]: f.value } }))
+
+export const paginationPipeline = <T extends CommonIndexArgs>(args: T) => [
+  { $skip: args.skip },
+  { $limit: args.take }
+]
+
+export const sortPipeline = <T extends CommonIndexArgs>(args: T) => {
+  const order = args.order === 'asc' ? 1 : -1
+
+  const doc = { $sort: { [args.orderBy]: order } }
+
+  return args.orderBy ? [doc] : []
+}
+
+export const standardIndexPipeline = <T extends CommonIndexArgs>(
+  args: T,
+  whitelist: readonly string[]
+) => [
+  ...filterPipeline(args, whitelist),
+  ...sortPipeline(args),
+  ...paginationPipeline(args)
+]

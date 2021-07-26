@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { indexQuery } from 'src/common/query'
+import { standardIndexPipeline } from 'src/common/query'
 import { CommonAddressArgs } from '../common/common.args'
 import { Device, DeviceModel } from './devices.schema'
 import { DevicesArgs, DeviceFilterFields } from './devices.args'
@@ -10,7 +10,9 @@ export class DevicesService {
   constructor(@InjectModel(Device.name) private deviceModel: DeviceModel) {}
 
   async findAll(args: DevicesArgs) {
-    return await indexQuery(this.deviceModel, DeviceFilterFields, args)
+    const pipeline = standardIndexPipeline(args, DeviceFilterFields)
+
+    return await this.deviceModel.aggregate(pipeline)
   }
 
   async findOne(args: CommonAddressArgs) {

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { indexQuery } from '../common/query'
+import { standardIndexPipeline } from '../common/query'
 import { Event, EventModel } from './events.schema'
 import { EventsArgs, EventFilterFields, EventArgs } from './events.args'
 
@@ -9,7 +9,9 @@ export class EventsService {
   constructor(@InjectModel(Event.name) private eventModel: EventModel) {}
 
   async findAll(args: EventsArgs) {
-    return await indexQuery(this.eventModel, EventFilterFields, args)
+    const pipeline = standardIndexPipeline(args, EventFilterFields)
+
+    return await this.eventModel.aggregate(pipeline)
   }
 
   async findOne(args: EventArgs) {

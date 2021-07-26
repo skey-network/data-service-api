@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { indexQuery } from '../common/query'
+import { standardIndexPipeline } from '../common/query'
 import { Key, KeyModel } from './keys.schema'
 import { KeysArgs, KeyFilterFields, KeyArgs } from './keys.args'
 
@@ -9,7 +9,9 @@ export class KeysService {
   constructor(@InjectModel(Key.name) private keyModel: KeyModel) {}
 
   async findAll(args: KeysArgs) {
-    return await indexQuery(this.keyModel, KeyFilterFields, args)
+    const pipeline = standardIndexPipeline(args, KeyFilterFields)
+
+    return await this.keyModel.aggregate(pipeline)
   }
 
   async findOne(args: KeyArgs) {
