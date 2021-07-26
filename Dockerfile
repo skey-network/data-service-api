@@ -9,6 +9,6 @@ RUN yarn install --frozen-lockfile
 
 ADD . .
 
-RUN npm run build
+RUN yarn run build
 
 CMD [ "node", "dist/src/main" ]
