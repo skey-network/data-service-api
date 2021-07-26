@@ -3,11 +3,16 @@ import { InjectModel } from '@nestjs/mongoose'
 import { standardIndexPipeline } from 'src/common/query'
 import { CommonAddressArgs } from '../common/common.args'
 import { Device, DeviceModel } from './devices.schema'
-import { DevicesArgs, DeviceFilterFields } from './devices.args'
+import { Key, KeyModel } from '../keys/keys.schema'
+import { DevicesArgs, DeviceFilterFields, DevicesByKeys } from './devices.args'
+import { forKeysOwnerPipeline } from './devices.query'
 
 @Injectable()
 export class DevicesService {
-  constructor(@InjectModel(Device.name) private deviceModel: DeviceModel) {}
+  constructor(
+    @InjectModel(Device.name) private deviceModel: DeviceModel,
+    @InjectModel(Key.name) private keyModel: KeyModel
+  ) {}
 
   async findAll(args: DevicesArgs) {
     const pipeline = standardIndexPipeline(args, DeviceFilterFields)
@@ -20,5 +25,14 @@ export class DevicesService {
     if (!device) throw new NotFoundException()
 
     return device
+  }
+
+  async byKeys(args: DevicesByKeys) {
+    const pipeline = [
+      ...forKeysOwnerPipeline(args.address),
+      ...standardIndexPipeline(args, DeviceFilterFields)
+    ]
+
+    return await this.keyModel.aggregate(pipeline)
   }
 }

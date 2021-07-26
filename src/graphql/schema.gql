@@ -65,7 +65,7 @@ type Device {
   connected: Boolean
   details: Details
   custom: String
-  keys: [String!]!
+  whitelist: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -103,6 +103,16 @@ type Query {
   organisation(address: String!): Organisation!
   devices(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, supplier: String, owner: String, visible: Boolean, active: Boolean, connected: Boolean): [Device!]!
   device(address: String!): Device!
+
+  """
+  
+    Return list of devices to which an address has keys. For example:
+    User with address user_1 is the owner of keys key_1 and key_2, key_1 is for device_1 and key_2 is for device_2.
+    There are also user_2, device_3 and key_3. The method will return [device_1, device_2]. This is helpful when user
+    need a list of devices he can interact with.
+  
+  """
+  devicesByKeys(supplier: String, owner: String, visible: Boolean, active: Boolean, connected: Boolean, skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, address: String!): [Device!]!
   keys(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, issuer: String, owner: String, name: String, device: String, burned: Boolean): [Key!]!
   key(assetId: String!): Key!
   events(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, sender: String, device: String, assetId: String, action: String, status: String): [Event!]!

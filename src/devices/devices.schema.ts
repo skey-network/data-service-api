@@ -169,7 +169,7 @@ export class Device {
 
   @Prop([String])
   @Field(() => [String], { defaultValue: [] })
-  keys?: string[]
+  whitelist?: string[]
 
   // ==============================
   // TIMESTAMPS
