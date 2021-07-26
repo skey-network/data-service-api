@@ -1,6 +1,6 @@
 import * as Db from '../../test/db'
-import { CommonIndexArgs } from './common.args'
-import { standardIndexPipeline } from './query'
+import { CommonIndexArgs } from '../common/common.args'
+import { standardIndexPipeline } from './standardIndex.query'
 
 const COLLECTION_NAME = 'items'
 

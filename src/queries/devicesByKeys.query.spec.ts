@@ -1,6 +1,6 @@
 import * as Db from '../../test/db'
 import { Key, KeyDocument, KeyModel, KeySchema } from '../keys/keys.schema'
-import { forKeysOwnerPipeline } from './devices.query'
+import { forKeysOwnerPipeline } from './devicesByKeys.query'
 
 const testData: Db.TestCollection[] = [
   {

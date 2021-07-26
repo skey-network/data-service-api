@@ -1,4 +1,4 @@
-import { CommonIndexArgs } from './common.args'
+import { CommonIndexArgs } from '../common/common.args'
 
 export interface FilterField {
   field: string

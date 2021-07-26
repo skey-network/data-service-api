@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { CommonAddressArgs } from '../common/common.args'
 import { Organisation, OrganisationModel } from './organisations.schema'
 import { OrganisationsArgs, OrganisationFilterFields } from './organisations.args'
-import { standardIndexPipeline } from '../common/query'
+import { standardIndexPipeline } from '../queries/standardIndex.query'
 
 @Injectable()
 export class OrganisationsService {

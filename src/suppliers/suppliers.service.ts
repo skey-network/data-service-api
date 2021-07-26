@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { CommonAddressArgs } from '../common/common.args'
 import { Supplier, SupplierModel } from './suppliers.schema'
 import { SuppliersArgs, SupplierFilterFields } from './suppliers.args'
-import { standardIndexPipeline } from 'src/common/query'
+import { standardIndexPipeline } from 'src/queries/standardIndex.query'
 
 @Injectable()
 export class SuppliersService {

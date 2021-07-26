@@ -1,3 +1,5 @@
+import { DevicesGeoSearchArgs } from '../devices/devices.args'
+
 export const forKeysOwnerPipeline = (owner: string) => [
   { $match: { owner } },
   { $project: { _id: 0, key: '$$ROOT' } },

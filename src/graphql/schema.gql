@@ -106,13 +106,21 @@ type Query {
 
   """
   
-    Return list of devices to which an address has keys. For example:
-    User with address user_1 is the owner of keys key_1 and key_2, key_1 is for device_1 and key_2 is for device_2.
-    There are also user_2, device_3 and key_3. The method will return [device_1, device_2]. This is helpful when user
-    need a list of devices he can interact with.
+    Returns list of devices to which an address has keys. For example, User with address user_1 is
+    the owner of keys key_1 and key_2, key_1 is for device_1 and key_2 is for device_2. There are
+    also user_2, device_3 and key_3. The method will return [device_1, device_2]. This is helpful
+    when user need a list of devices he can interact with.
   
   """
   devicesByKeys(supplier: String, owner: String, visible: Boolean, active: Boolean, connected: Boolean, skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, address: String!): [Device!]!
+
+  """
+  
+    Retruns list of devices that are inside of selected rectangle. For example, for points [lat:49, lng: 16]
+    as bottomLeft and [lat:54, lng:24] as upperRight, it's going to return all devices in Poland.
+  
+  """
+  devicesGeoSearch(supplier: String, owner: String, visible: Boolean, active: Boolean, connected: Boolean, skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, bottomLeftLatitude: Float!, bottomLeftLongitude: Float!, upperRightLatitude: Float!, upperRightLongitude: Float!): [Device!]!
   keys(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, issuer: String, owner: String, name: String, device: String, burned: Boolean): [Key!]!
   key(assetId: String!): Key!
   events(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, sender: String, device: String, assetId: String, action: String, status: String): [Event!]!

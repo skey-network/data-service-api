@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { standardIndexPipeline } from '../common/query'
+import { standardIndexPipeline } from '../queries/standardIndex.query'
 import { Key, KeyModel } from './keys.schema'
 import { KeysArgs, KeyFilterFields, KeyArgs } from './keys.args'
 

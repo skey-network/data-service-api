@@ -1,5 +1,5 @@
-import { ArgsType, Field } from '@nestjs/graphql'
-import { IsBoolean, IsOptional } from 'class-validator'
+import { ArgsType, Field, Float } from '@nestjs/graphql'
+import { IsBoolean, IsLatitude, IsLongitude, IsOptional } from 'class-validator'
 import { IsBlockchainAddress } from '../common/decorators'
 import { CommonIndexArgs } from '../common/common.args'
 
@@ -34,8 +34,27 @@ export class DevicesArgs extends CommonIndexArgs {
 @ArgsType()
 export class DevicesByKeys extends DevicesArgs {
   @Field()
-  // @IsBlockchainAddress()
+  @IsBlockchainAddress()
   address: string
+}
+
+@ArgsType()
+export class DevicesGeoSearchArgs extends DevicesArgs {
+  @Field(() => Float)
+  @IsLatitude()
+  bottomLeftLatitude: number
+
+  @Field(() => Float)
+  @IsLongitude()
+  bottomLeftLongitude: number
+
+  @Field(() => Float)
+  @IsLatitude()
+  upperRightLatitude: number
+
+  @Field(() => Float)
+  @IsLongitude()
+  upperRightLongitude: number
 }
 
 export const DeviceFilterFields = Object.freeze([

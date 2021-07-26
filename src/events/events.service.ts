@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { standardIndexPipeline } from '../common/query'
+import { standardIndexPipeline } from '../queries/standardIndex.query'
 import { Event, EventModel } from './events.schema'
 import { EventsArgs, EventFilterFields, EventArgs } from './events.args'
 
