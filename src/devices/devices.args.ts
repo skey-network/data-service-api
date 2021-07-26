@@ -1,6 +1,6 @@
 import { ArgsType, Field, Float } from '@nestjs/graphql'
 import { IsBoolean, IsLatitude, IsLongitude, IsOptional } from 'class-validator'
-import { IsBlockchainAddress } from '../common/decorators'
+import { IsBlockchainAddress } from '../common/common.decorators'
 import { CommonIndexArgs } from '../common/common.args'
 
 @ArgsType()

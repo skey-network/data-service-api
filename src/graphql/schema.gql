@@ -29,6 +29,12 @@ type Organisation {
   updatedAt: DateTime!
 }
 
+type Meta {
+  total: Int!
+  skip: Int!
+  take: Int!
+}
+
 type PhysicalAddress {
   addressLine1: String
   addressLine2: String
@@ -70,6 +76,11 @@ type Device {
   updatedAt: DateTime!
 }
 
+type PaginatedDevices {
+  items: [Device!]!
+  meta: Meta!
+}
+
 type Key {
   id: ID!
   assetId: String!
@@ -101,7 +112,7 @@ type Query {
   supplier(address: String!): Supplier!
   organisations(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, whitelisted: Boolean): [Organisation!]!
   organisation(address: String!): Organisation!
-  devices(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, supplier: String, owner: String, visible: Boolean, active: Boolean, connected: Boolean): [Device!]!
+  devices(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, supplier: String, owner: String, visible: Boolean, active: Boolean, connected: Boolean): PaginatedDevices!
   device(address: String!): Device!
 
   """

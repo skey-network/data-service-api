@@ -1,7 +1,7 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql'
 import { IsOptional, IsString, Matches, Max, Min } from 'class-validator'
 import config from '../config'
-import { IsBlockchainAddress } from './decorators'
+import { IsBlockchainAddress } from './common.decorators'
 
 @ArgsType()
 export class CommonIndexArgs {

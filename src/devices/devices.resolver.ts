@@ -1,7 +1,7 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { CommonAddressArgs } from '../common/common.args'
 import { DevicesArgs, DevicesByKeys, DevicesGeoSearchArgs } from './devices.args'
-import { Device } from './devices.schema'
+import { Device, PaginatedDevices } from './devices.schema'
 import { DevicesService } from './devices.service'
 
 const devicesByKeysDescription = `
@@ -20,7 +20,7 @@ const devicesGeoSearchDescription = `
 export class DevicesResolver {
   constructor(private devicesService: DevicesService) {}
 
-  @Query(() => [Device])
+  @Query(() => PaginatedDevices)
   async devices(@Args() args: DevicesArgs) {
     return await this.devicesService.findAll(args)
   }
