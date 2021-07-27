@@ -4,13 +4,29 @@ import { filterPipeline } from '../queries/standardIndex.query'
 import { Key, KeyModel } from './keys.schema'
 import { KeysArgs, KeyFilterFields, KeyArgs } from './keys.args'
 import { runQuery } from 'src/common/common.functions'
+import {
+  whitelistedProp,
+  WhitelistedPropInput
+} from 'src/queries/whitelistedProp.query'
+
+export const keysWhitelistedPropInput: WhitelistedPropInput = {
+  localId: 'assetId',
+  lookupCollection: 'devices',
+  localField: 'device',
+  foreignField: 'address',
+  foreignArray: 'whitelist',
+  newFieldName: 'whitelisted'
+}
 
 @Injectable()
 export class KeysService {
   constructor(@InjectModel(Key.name) private keyModel: KeyModel) {}
 
   async findAll(args: KeysArgs) {
-    const pipeline = filterPipeline(args, KeyFilterFields)
+    const pipeline = [
+      ...filterPipeline(args, KeyFilterFields),
+      ...whitelistedProp(keysWhitelistedPropInput)
+    ]
 
     return runQuery(this.keyModel, args, pipeline)
   }

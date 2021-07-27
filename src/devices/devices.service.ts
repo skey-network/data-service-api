@@ -1,9 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import {
-  filterPipeline,
-  standardIndexPipeline
-} from 'src/queries/standardIndex.query'
+import { filterPipeline } from 'src/queries/standardIndex.query'
 import { CommonAddressArgs } from '../common/common.args'
 import { Device, DeviceModel } from './devices.schema'
 import { Key, KeyModel } from '../keys/keys.schema'
@@ -16,6 +13,19 @@ import {
 import { forKeysOwnerPipeline } from '../queries/devicesByKeys.query'
 import { geoSearchPipeline } from 'src/queries/geoSearch.query'
 import { runQuery } from 'src/common/common.functions'
+import {
+  whitelistedProp,
+  WhitelistedPropInput
+} from 'src/queries/whitelistedProp.query'
+
+export const devicesWhitelistedPropInput: WhitelistedPropInput = {
+  localId: 'address',
+  lookupCollection: 'suppliers',
+  localField: 'supplier',
+  foreignField: 'address',
+  foreignArray: 'whitelist',
+  newFieldName: 'whitelisted'
+}
 
 @Injectable()
 export class DevicesService {
@@ -25,7 +35,10 @@ export class DevicesService {
   ) {}
 
   async findAll(args: DevicesArgs) {
-    const pipeline = filterPipeline(args, DeviceFilterFields)
+    const pipeline = [
+      ...filterPipeline(args, DeviceFilterFields),
+      ...this.whitelistedPropPipeline
+    ]
 
     return await runQuery(this.deviceModel, args, pipeline)
   }
@@ -40,7 +53,8 @@ export class DevicesService {
   async byKeys(args: DevicesByKeys) {
     const pipeline = [
       ...forKeysOwnerPipeline(args.address),
-      ...filterPipeline(args, DeviceFilterFields)
+      ...filterPipeline(args, DeviceFilterFields),
+      ...this.whitelistedPropPipeline
     ]
 
     return await runQuery(this.keyModel, args, pipeline)
@@ -49,9 +63,14 @@ export class DevicesService {
   async devicesGeoSearch(args: DevicesGeoSearchArgs) {
     const pipeline = [
       ...geoSearchPipeline(args),
-      ...filterPipeline(args, DeviceFilterFields)
+      ...filterPipeline(args, DeviceFilterFields),
+      ...this.whitelistedPropPipeline
     ]
 
     return await runQuery(this.deviceModel, args, pipeline)
+  }
+
+  private get whitelistedPropPipeline() {
+    return whitelistedProp(devicesWhitelistedPropInput)
   }
 }

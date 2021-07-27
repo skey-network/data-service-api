@@ -30,7 +30,7 @@ export class Supplier {
 
   @Prop([String])
   @Field(() => [String], { defaultValue: [] })
-  devices?: string[]
+  whitelist?: string[]
 
   @Prop(Date)
   @Field(() => Date)

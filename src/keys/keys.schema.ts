@@ -51,6 +51,13 @@ export class Key {
   @Prop(Date)
   @Field(() => Date)
   updatedAt: Date
+
+  // ==============================
+  // GRAPHQL ONLY
+  // ==============================
+
+  @Field(() => Boolean, { nullable: true })
+  whitelisted?: boolean
 }
 
 @ObjectType()

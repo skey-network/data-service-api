@@ -1,15 +1,9 @@
 import { MongooseModule } from '@nestjs/mongoose'
-import { defaultCoreCipherList } from 'constants'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import {
-  createConnection,
-  Connection,
-  model,
-  ConnectOptions,
-  Mongoose,
-  connection
-} from 'mongoose'
+import { createConnection, Connection, ConnectOptions } from 'mongoose'
 import { options } from '../src/database/database.module'
+
+export const VERSION = '4.4.7'
 
 export interface TestInstance {
   mongod: MongoMemoryServer
@@ -27,7 +21,7 @@ export const getMockedModule = (dbInstance: TestInstance) =>
   MongooseModule.forRoot(dbInstance.mongod.getUri(), dbInstance.options)
 
 export const getInstance = async (): Promise<TestInstance> => {
-  const mongod = await MongoMemoryServer.create()
+  const mongod = await MongoMemoryServer.create({ binary: { version: VERSION } })
   const connection = await createConnection(mongod.getUri(), options)
 
   const cleanup = async () => {
