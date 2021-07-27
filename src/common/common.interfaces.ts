@@ -3,19 +3,19 @@ import { Type } from '@nestjs/common'
 import { Field, Int, ObjectType } from '@nestjs/graphql'
 
 export interface QueryResult<T extends Document> {
-  items: T[]
+  objects: T[]
   meta: Meta
 }
 
 @ObjectType()
 export class Meta {
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   total: number
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   skip: number
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   take: number
 }
 
@@ -23,7 +23,7 @@ export const Paginated = <T>(classRef: Type<T>): any => {
   @ObjectType({ isAbstract: true })
   abstract class PaginatedType {
     @Field(() => [classRef])
-    items: T[]
+    objects: T[]
 
     @Field(() => Meta)
     meta: Meta

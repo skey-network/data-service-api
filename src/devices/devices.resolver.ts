@@ -30,11 +30,11 @@ export class DevicesResolver {
     return await this.devicesService.findOne(args)
   }
 
-  @Query(() => [Device], { description: devicesByKeysDescription })
+  @Query(() => PaginatedDevices, { description: devicesByKeysDescription })
   async devicesByKeys(@Args() args: DevicesByKeys) {
     return await this.devicesService.byKeys(args)
   }
-  @Query(() => [Device], { description: devicesGeoSearchDescription })
+  @Query(() => PaginatedDevices, { description: devicesGeoSearchDescription })
   async devicesGeoSearch(@Args() args: DevicesGeoSearchArgs) {
     return await this.devicesService.devicesGeoSearch(args)
   }

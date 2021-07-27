@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Model } from 'mongoose'
 import { Field, ID, ObjectType } from '@nestjs/graphql'
+import { Paginated } from 'src/common/common.interfaces'
 
 export type SupplierDocument = Supplier & Document
 export type SupplierModel = Model<SupplierDocument>
@@ -39,5 +40,8 @@ export class Supplier {
   @Field(() => Date)
   updatedAt: Date
 }
+
+@ObjectType()
+export class PaginatedSuppliers extends Paginated(Supplier) {}
 
 export const SupplierSchema = SchemaFactory.createForClass(Supplier)

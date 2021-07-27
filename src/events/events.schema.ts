@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Model } from 'mongoose'
 import { Field, ID, ObjectType } from '@nestjs/graphql'
+import { Paginated } from 'src/common/common.interfaces'
 
 export type EventDocument = Event & Document
 export type EventModel = Model<EventDocument>
@@ -43,5 +44,8 @@ export class Event {
   @Field(() => Date)
   updatedAt: Date
 }
+
+@ObjectType()
+export class PaginatedEvents extends Paginated(Event) {}
 
 export const EventSchema = SchemaFactory.createForClass(Event)

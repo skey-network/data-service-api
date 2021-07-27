@@ -1,13 +1,13 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { EventsArgs, EventArgs } from './events.args'
-import { Event } from './events.schema'
+import { Event, PaginatedEvents } from './events.schema'
 import { EventsService } from './events.service'
 
 @Resolver(() => Event)
 export class EventsResolver {
   constructor(private eventsService: EventsService) {}
 
-  @Query(() => [Event])
+  @Query(() => PaginatedEvents)
   async events(@Args() args: EventsArgs) {
     return await this.eventsService.findAll(args)
   }

@@ -25,14 +25,9 @@ export class DevicesService {
   ) {}
 
   async findAll(args: DevicesArgs) {
-    return await runQuery(
-      this.deviceModel,
-      args,
-      filterPipeline(args, DeviceFilterFields)
-    )
-    // const pipeline = standardIndexPipeline(args, DeviceFilterFields)
+    const pipeline = filterPipeline(args, DeviceFilterFields)
 
-    // return await this.deviceModel.aggregate(pipeline)
+    return await runQuery(this.deviceModel, args, pipeline)
   }
 
   async findOne(args: CommonAddressArgs) {
@@ -45,18 +40,18 @@ export class DevicesService {
   async byKeys(args: DevicesByKeys) {
     const pipeline = [
       ...forKeysOwnerPipeline(args.address),
-      ...standardIndexPipeline(args, DeviceFilterFields)
+      ...filterPipeline(args, DeviceFilterFields)
     ]
 
-    return await this.keyModel.aggregate(pipeline)
+    return await runQuery(this.keyModel, args, pipeline)
   }
 
   async devicesGeoSearch(args: DevicesGeoSearchArgs) {
     const pipeline = [
       ...geoSearchPipeline(args),
-      ...standardIndexPipeline(args, DeviceFilterFields)
+      ...filterPipeline(args, DeviceFilterFields)
     ]
 
-    return await this.deviceModel.aggregate(pipeline)
+    return await runQuery(this.deviceModel, args, pipeline)
   }
 }

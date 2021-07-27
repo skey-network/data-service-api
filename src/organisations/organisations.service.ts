@@ -3,7 +3,8 @@ import { InjectModel } from '@nestjs/mongoose'
 import { CommonAddressArgs } from '../common/common.args'
 import { Organisation, OrganisationModel } from './organisations.schema'
 import { OrganisationsArgs, OrganisationFilterFields } from './organisations.args'
-import { standardIndexPipeline } from '../queries/standardIndex.query'
+import { filterPipeline } from '../queries/standardIndex.query'
+import { runQuery } from 'src/common/common.functions'
 
 @Injectable()
 export class OrganisationsService {
@@ -12,9 +13,9 @@ export class OrganisationsService {
   ) {}
 
   async findAll(args: OrganisationsArgs) {
-    const pipeline = standardIndexPipeline(args, OrganisationFilterFields)
+    const pipeline = filterPipeline(args, OrganisationFilterFields)
 
-    return await this.organisationModel.aggregate(pipeline)
+    return await runQuery(this.organisationModel, args, pipeline)
   }
 
   async findOne(args: CommonAddressArgs) {

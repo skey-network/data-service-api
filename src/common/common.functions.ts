@@ -17,13 +17,15 @@ export const runQuery = async <T extends Document, Y extends CommonIndexArgs>(
     ...paginationPipeline(args)
   ])
 
-  const [items, count] = await Promise.all([getResults, getCount])
+  const [objects, count] = await Promise.all([getResults, getCount])
+
+  const total: number = count[0]?.total ?? 0
 
   const meta: Meta = {
-    total: count[0]?.total,
+    total,
     skip: args.skip,
     take: args.take
   }
 
-  return { items, meta }
+  return { objects, meta }
 }

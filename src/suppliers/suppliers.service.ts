@@ -3,16 +3,17 @@ import { InjectModel } from '@nestjs/mongoose'
 import { CommonAddressArgs } from '../common/common.args'
 import { Supplier, SupplierModel } from './suppliers.schema'
 import { SuppliersArgs, SupplierFilterFields } from './suppliers.args'
-import { standardIndexPipeline } from 'src/queries/standardIndex.query'
+import { filterPipeline } from 'src/queries/standardIndex.query'
+import { runQuery } from 'src/common/common.functions'
 
 @Injectable()
 export class SuppliersService {
   constructor(@InjectModel(Supplier.name) private supplierModel: SupplierModel) {}
 
   async findAll(args: SuppliersArgs) {
-    const pipeline = standardIndexPipeline(args, SupplierFilterFields)
+    const pipeline = filterPipeline(args, SupplierFilterFields)
 
-    return await this.supplierModel.aggregate(pipeline)
+    return await runQuery(this.supplierModel, args, pipeline)
   }
 
   async findOne(args: CommonAddressArgs) {
