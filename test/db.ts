@@ -53,6 +53,6 @@ export const removeTestData = async (
 ) => {
   for (const { collection, objects } of collections) {
     const conn = connection.collection(collection)
-    await Promise.all(objects.map((obj) => conn.deleteMany(obj)))
+    await Promise.all(objects.map((obj) => conn.remove(obj)))
   }
 }

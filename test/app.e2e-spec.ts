@@ -8,42 +8,58 @@ import * as request from 'supertest'
 import { AppModule } from './../src/app.module'
 import config from '../src/config'
 import { Connection } from 'mongoose'
-import {
-  connectToRealDb,
-  insertTestData,
-  removeTestData,
-  TestCollection
-} from './db'
+import { connectToRealDb } from './db'
 
 const get = async (app: INestApplication, query: any) => {
-  return await request(app.getHttpServer())
+  const res = await request(app.getHttpServer())
     .post('/graphql')
     .set('x-api-key', config().app.apiKey)
     .set('Content-Type', 'application/json')
     .send(`{"query":"{${query}}"}`)
     .expect(200)
+
+  return res.body.data
 }
 
-const testData: TestCollection[] = [
+const cases = [
   {
-    collection: 'devices',
-    objects: [{ address: '3MFnBNTTCqQHuFX3H8p9ZWzccvLrwfBELkB' }]
+    toString: () => 'devices',
+    singular: 'device',
+    plural: 'devices',
+    idField: 'address',
+    id: '3MFnBNTTCqQHuFX3H8p9ZWzccvLrwfBELkB'
   },
   {
-    collection: 'events',
-    objects: [{ txHash: 'EEgeBai5os5MbkE8qybjVq6DAPfhTrgMQZRSvUrMqQSL' }]
+    toString: () => 'events',
+    singular: 'event',
+    plural: 'events',
+    id: 'EEgeBai5os5MbkE8qybjVq6DAPfhTrgMQZRSvUrMqQSL',
+    idField: 'txHash',
+    collection: 'events'
   },
   {
-    collection: 'keys',
-    objects: [{ assetId: 'C28XsGGGKbmqiMruZCuBBSuXDc4Hsx4NXdmygi8QDyWn' }]
+    toString: () => 'keys',
+    singular: 'key',
+    plural: 'keys',
+    id: 'C28XsGGGKbmqiMruZCuBBSuXDc4Hsx4NXdmygi8QDyWn',
+    idField: 'assetId',
+    collection: 'keys'
   },
   {
-    collection: 'organisations',
-    objects: [{ address: '3MQBMVe3htusKJTpf7vGHnu2c7Wd6XjNHvd' }]
+    toString: () => 'organisations',
+    singular: 'organisation',
+    plural: 'organisations',
+    id: '3MQBMVe3htusKJTpf7vGHnu2c7Wd6XjNHvd',
+    idField: 'address',
+    collection: 'organisations'
   },
   {
-    collection: 'suppliers',
-    objects: [{ address: '3M1he2S9iiLqj4M4D9dG4BAGkMYvHwHEg87' }]
+    toString: () => 'suppliers',
+    singular: 'supplier',
+    plural: 'suppliers',
+    id: '3M1he2S9iiLqj4M4D9dG4BAGkMYvHwHEg87',
+    idField: 'address',
+    collection: 'suppliers'
   }
 ]
 
@@ -53,7 +69,6 @@ describe('AppController (e2e)', () => {
 
   beforeAll(async () => {
     conn = await connectToRealDb()
-    await insertTestData(conn, testData)
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
@@ -64,14 +79,31 @@ describe('AppController (e2e)', () => {
   })
 
   afterAll(async () => {
-    await removeTestData(conn, testData)
     await conn.close()
     await app.close()
   })
 
-  it('devices', async () => {
-    const query = 'devices { objects { name } }'
-    const result = await get(app, query)
-    console.log(JSON.stringify(result.body, null, 2))
+  describe.each(cases)('%s', (args) => {
+    beforeEach(async () => {
+      await conn.collection(args.plural).insertOne({ [args.idField]: args.id })
+    })
+
+    afterEach(async () => {
+      await conn.collection(args.plural).deleteOne({ [args.idField]: args.id })
+    })
+
+    it('single item', async () => {
+      const query = `${args.singular} (${args.idField}: \\"${args.id}\\") { ${args.idField} }`
+      const res = await get(app, query)
+
+      expect(res).toEqual({ [args.singular]: { [args.idField]: args.id } })
+    })
+
+    it('multiple items', async () => {
+      const query = `${args.plural} { objects { ${args.idField} } }`
+      const res = await get(app, query)
+
+      expect(res[args.plural].objects.length).toBeGreaterThanOrEqual(1)
+    })
   })
 })
