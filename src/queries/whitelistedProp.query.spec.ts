@@ -201,7 +201,7 @@ describe('whitelistedProp query', () => {
 
   it.each(cases)('%s', async ({ input, expected, testData, collectionName }) => {
     db = await Db.getInstance()
-    await Db.insertTestData(db, testData)
+    await Db.insertTestData(db.connection, testData)
 
     const collectionRef = db.connection.collection(collectionName)
     const pipeline = whitelistedProp(input)

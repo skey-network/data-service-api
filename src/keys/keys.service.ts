@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose'
 import { filterPipeline } from '../queries/standardIndex.query'
 import { Key, KeyModel } from './keys.schema'
 import { KeysArgs, KeyFilterFields, KeyArgs } from './keys.args'
-import { runQuery } from 'src/common/common.functions'
+import { runQuery } from '../common/common.functions'
 import {
   whitelistedProp,
   WhitelistedPropInput
-} from 'src/queries/whitelistedProp.query'
+} from '../queries/whitelistedProp.query'
 
 export const keysWhitelistedPropInput: WhitelistedPropInput = {
   localId: 'assetId',
@@ -24,7 +24,7 @@ export class KeysService {
 
   async findAll(args: KeysArgs) {
     const pipeline = [
-      ...filterPipeline(args, KeyFilterFields),
+      ...filterPipeline(args.filter, KeyFilterFields),
       ...whitelistedProp(keysWhitelistedPropInput)
     ]
 

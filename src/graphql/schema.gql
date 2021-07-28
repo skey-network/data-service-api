@@ -130,32 +130,81 @@ type PaginatedEvents {
 }
 
 type Query {
-  suppliers(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, whitelisted: Boolean): PaginatedSuppliers!
+  suppliers(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, filter: SuppliersFilter = {}): PaginatedSuppliers!
   supplier(address: String!): Supplier!
-  organisations(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, whitelisted: Boolean): PaginatedOrganisations!
+  organisations(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, filter: OrganisationsFilter = {}): PaginatedOrganisations!
   organisation(address: String!): Organisation!
-  devices(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, supplier: String, owner: String, visible: Boolean, active: Boolean, connected: Boolean): PaginatedDevices!
+  devices(
+    skip: Int = 0
+    take: Int = 25
+    order: String = "asc"
+    orderBy: String
+    filter: DevicesFilter = {}
+
+    """
+    
+      Retruns list of devices that are inside of selected rectangle. For example, for points [lat:49, lng: 16]
+      as bottomLeft and [lat:54, lng:24] as upperRight, it's going to return all devices in Poland.
+    
+    """
+    geoSearch: GeoSearchInput
+
+    """
+    
+      Returns list of devices to which an address has keys. For example, User with address user_1 is
+      the owner of keys key_1 and key_2, key_1 is for device_1 and key_2 is for device_2. There are
+      also user_2, device_3 and key_3. The method will return [device_1, device_2]. This is helpful
+      when user need a list of devices he can interact with.
+    
+    """
+    keysOwner: String
+  ): PaginatedDevices!
   device(address: String!): Device!
-
-  """
-  
-    Returns list of devices to which an address has keys. For example, User with address user_1 is
-    the owner of keys key_1 and key_2, key_1 is for device_1 and key_2 is for device_2. There are
-    also user_2, device_3 and key_3. The method will return [device_1, device_2]. This is helpful
-    when user need a list of devices he can interact with.
-  
-  """
-  devicesByKeys(supplier: String, owner: String, visible: Boolean, active: Boolean, connected: Boolean, skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, address: String!): PaginatedDevices!
-
-  """
-  
-    Retruns list of devices that are inside of selected rectangle. For example, for points [lat:49, lng: 16]
-    as bottomLeft and [lat:54, lng:24] as upperRight, it's going to return all devices in Poland.
-  
-  """
-  devicesGeoSearch(supplier: String, owner: String, visible: Boolean, active: Boolean, connected: Boolean, skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, bottomLeftLatitude: Float!, bottomLeftLongitude: Float!, upperRightLatitude: Float!, upperRightLongitude: Float!): PaginatedDevices!
-  keys(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, issuer: String, owner: String, name: String, device: String, burned: Boolean): PaginatedKeys!
+  keys(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, filter: KeysFilter = {}): PaginatedKeys!
   key(assetId: String!): Key!
-  events(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, sender: String, device: String, assetId: String, action: String, status: String): PaginatedEvents!
+  events(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, filter: EventsFilter = {}): PaginatedEvents!
   event(txHash: String!): Event!
+}
+
+input SuppliersFilter {
+  whitelisted: Boolean
+}
+
+input OrganisationsFilter {
+  whitelisted: Boolean
+}
+
+input DevicesFilter {
+  supplier: String
+  owner: String
+  visible: Boolean
+  active: Boolean
+  connected: Boolean
+  whitelisted: Boolean
+}
+
+input GeoSearchInput {
+  bottomLeft: Point!
+  upperRight: Point!
+}
+
+input Point {
+  lat: Float!
+  lng: Float!
+}
+
+input KeysFilter {
+  issuer: String
+  owner: String
+  name: String
+  device: String
+  burned: Boolean
+}
+
+input EventsFilter {
+  sender: String
+  device: String
+  assetId: String
+  action: String
+  status: String
 }

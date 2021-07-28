@@ -178,7 +178,7 @@ describe('index query', () => {
   beforeAll(async () => {
     db = await Db.getInstance()
 
-    await Db.insertTestData(db, [testData])
+    await Db.insertTestData(db.connection, [testData])
   })
 
   afterAll(async () => {

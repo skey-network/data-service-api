@@ -1,10 +1,10 @@
-import { ArgsType, Field } from '@nestjs/graphql'
-import { IsBoolean, IsOptional, IsString } from 'class-validator'
-import { IsBlockchainAddress, IsBlockchainTxHash } from 'src/common/common.decorators'
+import { ArgsType, Field, InputType } from '@nestjs/graphql'
+import { IsBoolean, IsOptional, IsString, ValidateNested } from 'class-validator'
+import { IsBlockchainAddress, IsBlockchainTxHash } from '../common/common.decorators'
 import { CommonIndexArgs } from '../common/common.args'
 
-@ArgsType()
-export class KeysArgs extends CommonIndexArgs {
+@InputType()
+export class KeysFilter {
   @Field({ nullable: true })
   @IsBlockchainAddress()
   @IsOptional()
@@ -29,6 +29,13 @@ export class KeysArgs extends CommonIndexArgs {
   @IsBoolean()
   @IsOptional()
   burned?: boolean
+}
+
+@ArgsType()
+export class KeysArgs extends CommonIndexArgs {
+  @Field(() => KeysFilter, { defaultValue: {} })
+  @ValidateNested()
+  filter: KeysFilter
 }
 
 @ArgsType()

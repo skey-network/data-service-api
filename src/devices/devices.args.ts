@@ -1,10 +1,50 @@
-import { ArgsType, Field, Float } from '@nestjs/graphql'
-import { IsBoolean, IsLatitude, IsLongitude, IsOptional } from 'class-validator'
+import { ArgsType, Field, Float, InputType } from '@nestjs/graphql'
+import {
+  IsBoolean,
+  IsLatitude,
+  IsLongitude,
+  IsOptional,
+  ValidateNested
+} from 'class-validator'
 import { IsBlockchainAddress } from '../common/common.decorators'
 import { CommonIndexArgs } from '../common/common.args'
 
-@ArgsType()
-export class DevicesArgs extends CommonIndexArgs {
+const keysOwnerDescription = `
+  Returns list of devices to which an address has keys. For example, User with address user_1 is
+  the owner of keys key_1 and key_2, key_1 is for device_1 and key_2 is for device_2. There are
+  also user_2, device_3 and key_3. The method will return [device_1, device_2]. This is helpful
+  when user need a list of devices he can interact with.
+`
+
+const geoSearchDescription = `
+  Retruns list of devices that are inside of selected rectangle. For example, for points [lat:49, lng: 16]
+  as bottomLeft and [lat:54, lng:24] as upperRight, it's going to return all devices in Poland.
+`
+
+@InputType()
+export class Point {
+  @Field(() => Float)
+  @IsLatitude()
+  lat: number
+
+  @Field(() => Float)
+  @IsLongitude()
+  lng: number
+}
+
+@InputType()
+export class GeoSearchInput {
+  @Field(() => Point)
+  @ValidateNested()
+  bottomLeft: Point
+
+  @Field(() => Point)
+  @ValidateNested()
+  upperRight: Point
+}
+
+@InputType()
+export class DevicesFilter {
   @Field({ nullable: true })
   @IsBlockchainAddress()
   @IsOptional()
@@ -29,6 +69,27 @@ export class DevicesArgs extends CommonIndexArgs {
   @IsBoolean()
   @IsOptional()
   connected?: boolean
+
+  @Field({ nullable: true })
+  @IsBoolean()
+  @IsOptional()
+  whitelisted?: boolean
+}
+
+@ArgsType()
+export class DevicesArgs extends CommonIndexArgs {
+  @Field(() => DevicesFilter, { defaultValue: {} })
+  @ValidateNested()
+  filter: DevicesFilter
+
+  @Field(() => GeoSearchInput, { nullable: true, description: geoSearchDescription })
+  @ValidateNested()
+  geoSearch?: GeoSearchInput
+
+  @Field(() => String, { nullable: true, description: keysOwnerDescription })
+  @IsBlockchainAddress()
+  @IsOptional()
+  keysOwner?: string
 }
 
 @ArgsType()
@@ -38,29 +99,11 @@ export class DevicesByKeys extends DevicesArgs {
   address: string
 }
 
-@ArgsType()
-export class DevicesGeoSearchArgs extends DevicesArgs {
-  @Field(() => Float)
-  @IsLatitude()
-  bottomLeftLatitude: number
-
-  @Field(() => Float)
-  @IsLongitude()
-  bottomLeftLongitude: number
-
-  @Field(() => Float)
-  @IsLatitude()
-  upperRightLatitude: number
-
-  @Field(() => Float)
-  @IsLongitude()
-  upperRightLongitude: number
-}
-
 export const DeviceFilterFields = Object.freeze([
   'supplier',
   'owner',
   'visible',
   'active',
-  'connected'
+  'connected',
+  'whitelisted'
 ])

@@ -1,6 +1,11 @@
 import * as Db from '../../test/db'
-import { Key, KeyDocument, KeyModel, KeySchema } from '../keys/keys.schema'
-import { forKeysOwnerPipeline } from './devicesByKeys.query'
+import {
+  Device,
+  DeviceDocument,
+  DeviceModel,
+  DeviceSchema
+} from '../devices/devices.schema'
+import { keysOwnerPipeline } from './devicesByKeys.query'
 
 const testData: Db.TestCollection[] = [
   {
@@ -29,16 +34,12 @@ const cases = [
   {
     toString: () => 'user_1',
     owner: 'user_1',
-    expected: [{ address: 'device_1', keys: ['key_1'] }]
+    expected: ['device_1']
   },
   {
     toString: () => 'user_2',
     owner: 'user_2',
-    expected: [
-      { address: 'device_4', keys: ['key_5'] },
-      { address: 'device_3', keys: ['key_4', 'key_3'] },
-      { address: 'device_2', keys: ['key_2'] }
-    ]
+    expected: ['device_2', 'device_3', 'device_4']
   },
   {
     toString: () => 'user_3',
@@ -49,14 +50,14 @@ const cases = [
 
 describe('forKeysOwner query', () => {
   let db: Db.TestInstance
-  let keyModel: KeyModel
+  let deviceModel: DeviceModel
 
   beforeAll(async () => {
     db = await Db.getInstance()
 
-    await Db.insertTestData(db, testData)
+    await Db.insertTestData(db.connection, testData)
 
-    keyModel = db.connection.model<KeyDocument>(Key.name, KeySchema)
+    deviceModel = db.connection.model<DeviceDocument>(Device.name, DeviceSchema)
   })
 
   afterAll(async () => {
@@ -64,14 +65,11 @@ describe('forKeysOwner query', () => {
   })
 
   it.each(cases)('%s', async ({ owner, expected }) => {
-    const pipeline = forKeysOwnerPipeline(owner)
+    const pipeline = keysOwnerPipeline(owner)
 
-    const results = await keyModel.aggregate(pipeline)
+    const results = await deviceModel.aggregate(pipeline)
 
-    const ids = results.map((result) => ({
-      address: result.address,
-      keys: result.keys.map((key) => key.assetId)
-    }))
+    const ids = results.map((doc) => doc.address)
 
     expect(ids).toEqual(expected)
   })

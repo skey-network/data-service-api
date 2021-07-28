@@ -1,7 +1,9 @@
 import { MongooseModule } from '@nestjs/mongoose'
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import { createConnection, Connection, ConnectOptions } from 'mongoose'
-import { options } from '../src/database/database.module'
+import { Connection, ConnectOptions } from 'mongoose'
+import { createUri, options } from '../src/database/database.module'
+import { createConnection } from 'mongoose'
+import config from '../src/config'
 
 export const VERSION = '4.4.7'
 
@@ -15,6 +17,10 @@ export interface TestInstance {
 export interface TestCollection {
   collection: string
   objects: any[]
+}
+
+export const connectToRealDb = async () => {
+  return await createConnection(createUri(config().database), options)
 }
 
 export const getMockedModule = (dbInstance: TestInstance) =>
@@ -33,10 +39,20 @@ export const getInstance = async (): Promise<TestInstance> => {
 }
 
 export const insertTestData = async (
-  db: TestInstance,
+  connection: Connection,
   collections: TestCollection[]
 ) => {
   for (const { collection, objects } of collections) {
-    await db.connection.collection(collection).insertMany(objects)
+    await connection.collection(collection).insertMany(objects)
+  }
+}
+
+export const removeTestData = async (
+  connection: Connection,
+  collections: TestCollection[]
+) => {
+  for (const { collection, objects } of collections) {
+    const conn = connection.collection(collection)
+    await Promise.all(objects.map((obj) => conn.deleteMany(obj)))
   }
 }

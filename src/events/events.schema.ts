@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Model } from 'mongoose'
 import { Field, ID, ObjectType } from '@nestjs/graphql'
-import { Paginated } from 'src/common/common.interfaces'
+import { Paginated } from '../common/common.interfaces'
 
 export type EventDocument = Event & Document
 export type EventModel = Model<EventDocument>

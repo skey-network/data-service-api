@@ -1,5 +1,5 @@
+import { GeoSearchInput } from '../devices/devices.args'
 import * as Db from '../../test/db'
-import { CommonIndexArgs } from '../common/common.args'
 import { geoSearchPipeline } from './geoSearch.query'
 
 const COLLECTION_NAME = 'devices'
@@ -46,42 +46,28 @@ const testData: Db.TestCollection = {
 const cases = [
   {
     toString: () => 'devices in olsztyn',
-    args: {
-      bottomLeftLatitude: 53.733708863399784,
-      bottomLeftLongitude: 20.422562441668152,
-      upperRightLatitude: 53.81787639471819,
-      upperRightLongitude: 20.5776110691132
-    },
+    args: [
+      53.733708863399784, 20.422562441668152, 53.81787639471819, 20.5776110691132
+    ],
     expected: [1, 2, 3, 4]
   },
   {
     toString: () => 'devices in Los Angeles',
-    args: {
-      bottomLeftLatitude: 33.24868201002417,
-      bottomLeftLongitude: -119.20873846958939,
-      upperRightLatitude: 34.55545553962698,
-      upperRightLongitude: -116.45615829562799
-    },
+    args: [
+      33.24868201002417, -119.20873846958939, 34.55545553962698, -116.45615829562799
+    ],
     expected: [14, 15, 16]
   },
   {
     toString: () => 'all devices',
-    args: {
-      bottomLeftLatitude: -90,
-      bottomLeftLongitude: -180,
-      upperRightLatitude: 90,
-      upperRightLongitude: 180
-    },
+    args: [-90, -180, 90, 180],
     expected: testData.objects.map(({ id }) => id)
   },
   {
     toString: () => 'greenland',
-    args: {
-      bottomLeftLatitude: 74.13707430377875,
-      bottomLeftLongitude: -42.074324768886614,
-      upperRightLatitude: 74.15707430377875,
-      upperRightLongitude: -42.044324768886614
-    },
+    args: [
+      74.13707430377875, -42.074324768886614, 74.15707430377875, -42.044324768886614
+    ],
     expected: [11]
   }
 ]
@@ -92,7 +78,7 @@ describe('geoSearch query', () => {
   beforeAll(async () => {
     db = await Db.getInstance()
 
-    await Db.insertTestData(db, [testData])
+    await Db.insertTestData(db.connection, [testData])
   })
 
   afterAll(async () => {
@@ -100,12 +86,14 @@ describe('geoSearch query', () => {
   })
 
   it.each(cases)('%s', async ({ args, expected }) => {
-    const defaults = new CommonIndexArgs()
-    const input = { ...defaults, ...args }
-
     const collection = db.connection.collection(COLLECTION_NAME)
 
-    const pipeline = geoSearchPipeline(input as any)
+    const input: GeoSearchInput = {
+      bottomLeft: { lat: args[0], lng: args[1] },
+      upperRight: { lat: args[2], lng: args[3] }
+    }
+
+    const pipeline = geoSearchPipeline(input)
 
     const results = await collection.aggregate(pipeline).toArray()
 

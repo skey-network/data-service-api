@@ -1,5 +1,5 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
-import { CommonAddressArgs } from 'src/common/common.args'
+import { CommonAddressArgs } from '../common/common.args'
 import { OrganisationsArgs } from './organisations.args'
 import { Organisation, PaginatedOrganisations } from './organisations.schema'
 import { OrganisationsService } from './organisations.service'

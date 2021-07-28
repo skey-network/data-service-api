@@ -11,11 +11,13 @@ export const runQuery = async <T extends Document, Y extends CommonIndexArgs>(
 ): Promise<QueryResult<T>> => {
   const getCount = model.aggregate(pipeline).count('total')
 
-  const getResults = model.aggregate([
+  const joinedPipeline = [
     ...pipeline,
     ...sortPipeline(args),
     ...paginationPipeline(args)
-  ])
+  ]
+
+  const getResults = model.aggregate(joinedPipeline)
 
   const [objects, count] = await Promise.all([getResults, getCount])
 

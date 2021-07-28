@@ -5,7 +5,7 @@ export interface FilterField {
   value: any
 }
 
-export const getFilterFields = <T extends CommonIndexArgs>(
+export const getFilterFields = <T extends any>(
   args: T,
   whitelist: readonly string[]
 ): FilterField[] =>
@@ -13,7 +13,7 @@ export const getFilterFields = <T extends CommonIndexArgs>(
     .filter(([key, value]) => whitelist.includes(key) && value !== undefined)
     .map(([key, value]) => ({ field: key, value }))
 
-export const filterPipeline = <T extends CommonIndexArgs>(
+export const filterPipeline = <T extends any>(
   args: T,
   whitelist: readonly string[]
 ) =>

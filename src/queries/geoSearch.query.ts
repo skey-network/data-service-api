@@ -1,17 +1,21 @@
-import { DevicesGeoSearchArgs } from '../devices/devices.args'
+import { GeoSearchInput } from '../devices/devices.args'
 
-export const geoSearchPipeline = (args: DevicesGeoSearchArgs) => [
-  { $addFields: { location: { type: 'Point', coordinates: ['$lng', '$lat'] } } },
-  {
-    $match: {
-      location: {
-        $geoWithin: {
-          $box: [
-            [args.bottomLeftLongitude, args.bottomLeftLatitude],
-            [args.upperRightLongitude, args.upperRightLatitude]
-          ]
+export const geoSearchPipeline = (input?: GeoSearchInput) => {
+  if (!input) return []
+
+  return [
+    { $addFields: { location: { type: 'Point', coordinates: ['$lng', '$lat'] } } },
+    {
+      $match: {
+        location: {
+          $geoWithin: {
+            $box: [
+              [input.bottomLeft.lng, input.bottomLeft.lat],
+              [input.upperRight.lng, input.upperRight.lat]
+            ]
+          }
         }
       }
     }
-  }
-]
+  ]
+}

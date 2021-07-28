@@ -1,13 +1,20 @@
-import { ArgsType, Field } from '@nestjs/graphql'
-import { IsBoolean, IsOptional } from 'class-validator'
+import { ArgsType, Field, InputType } from '@nestjs/graphql'
+import { IsBoolean, IsOptional, ValidateNested } from 'class-validator'
 import { CommonIndexArgs } from '../common/common.args'
 
-@ArgsType()
-export class OrganisationsArgs extends CommonIndexArgs {
+@InputType()
+export class OrganisationsFilter {
   @Field({ nullable: true })
   @IsBoolean()
   @IsOptional()
   whitelisted?: boolean
+}
+
+@ArgsType()
+export class OrganisationsArgs extends CommonIndexArgs {
+  @Field(() => OrganisationsFilter, { defaultValue: {} })
+  @ValidateNested()
+  filter: OrganisationsFilter
 }
 
 export const OrganisationFilterFields = Object.freeze(['whitelisted'])

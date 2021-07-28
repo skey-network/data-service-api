@@ -3,14 +3,14 @@ import { InjectModel } from '@nestjs/mongoose'
 import { filterPipeline } from '../queries/standardIndex.query'
 import { Event, EventModel } from './events.schema'
 import { EventsArgs, EventFilterFields, EventArgs } from './events.args'
-import { runQuery } from 'src/common/common.functions'
+import { runQuery } from '../common/common.functions'
 
 @Injectable()
 export class EventsService {
   constructor(@InjectModel(Event.name) private eventModel: EventModel) {}
 
   async findAll(args: EventsArgs) {
-    const pipeline = filterPipeline(args, EventFilterFields)
+    const pipeline = filterPipeline(args.filter, EventFilterFields)
 
     return await runQuery(this.eventModel, args, pipeline)
   }
