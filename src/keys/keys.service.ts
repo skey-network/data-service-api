@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { filterPipeline } from '../queries/standardIndex.query'
 import { Key, KeyModel } from './keys.schema'
 import { KeysArgs, KeyFilterFields, KeyArgs } from './keys.args'
-import { runQuery } from '../common/common.functions'
+import { getItem, runQuery } from '../common/common.functions'
 import {
   whitelistedProp,
   WhitelistedPropInput
@@ -32,9 +32,6 @@ export class KeysService {
   }
 
   async findOne(args: KeyArgs) {
-    const key = await this.keyModel.findOne({ assetId: args.assetId })
-    if (!key) throw new NotFoundException()
-
-    return key
+    return await getItem(this.keyModel, 'assetId', args.assetId)
   }
 }

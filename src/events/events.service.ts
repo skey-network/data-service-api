@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { filterPipeline } from '../queries/standardIndex.query'
 import { Event, EventModel } from './events.schema'
 import { EventsArgs, EventFilterFields, EventArgs } from './events.args'
-import { runQuery } from '../common/common.functions'
+import { getItem, runQuery } from '../common/common.functions'
 
 @Injectable()
 export class EventsService {
@@ -16,9 +16,6 @@ export class EventsService {
   }
 
   async findOne(args: EventArgs) {
-    const event = await this.eventModel.findOne({ txHash: args.txHash })
-    if (!event) throw new NotFoundException()
-
-    return event
+    return await getItem(this.eventModel, 'txHash', args.txHash)
   }
 }

@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { CommonAddressArgs } from '../common/common.args'
 import { Organisation, OrganisationModel } from './organisations.schema'
 import { OrganisationsArgs, OrganisationFilterFields } from './organisations.args'
 import { filterPipeline } from '../queries/standardIndex.query'
-import { runQuery } from '../common/common.functions'
+import { getItem, runQuery } from '../common/common.functions'
 
 @Injectable()
 export class OrganisationsService {
@@ -19,11 +19,6 @@ export class OrganisationsService {
   }
 
   async findOne(args: CommonAddressArgs) {
-    const organisation = await this.organisationModel.findOne({
-      address: args.address
-    })
-    if (!organisation) throw new NotFoundException()
-
-    return organisation
+    return await getItem(this.organisationModel, 'address', args.address)
   }
 }

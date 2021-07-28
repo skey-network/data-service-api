@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common'
 import { Document, Model } from 'mongoose'
 import { paginationPipeline, sortPipeline } from '../queries/standardIndex.query'
 import { CommonIndexArgs } from './common.args'
@@ -30,4 +31,15 @@ export const runQuery = async <T extends Document, Y extends CommonIndexArgs>(
   }
 
   return { objects, meta }
+}
+
+export const getItem = async <T extends Document>(
+  model: Model<T>,
+  idField: string,
+  id: string
+) => {
+  const item = await model.findOne({ [idField]: id } as any)
+  if (!item) throw new NotFoundException()
+
+  return item
 }

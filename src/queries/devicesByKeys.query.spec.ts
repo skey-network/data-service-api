@@ -54,7 +54,6 @@ describe('forKeysOwner query', () => {
 
   beforeAll(async () => {
     db = await Db.getInstance()
-
     await Db.insertTestData(db.connection, testData)
 
     deviceModel = db.connection.model<DeviceDocument>(Device.name, DeviceSchema)

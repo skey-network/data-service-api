@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { filterPipeline } from '../queries/standardIndex.query'
 import { CommonAddressArgs } from '../common/common.args'
@@ -6,7 +6,7 @@ import { Device, DeviceModel } from './devices.schema'
 import { DevicesArgs, DeviceFilterFields } from './devices.args'
 import { keysOwnerPipeline } from '../queries/devicesByKeys.query'
 import { geoSearchPipeline } from '../queries/geoSearch.query'
-import { runQuery } from '../common/common.functions'
+import { getItem, runQuery } from '../common/common.functions'
 import {
   whitelistedProp,
   WhitelistedPropInput
@@ -37,9 +37,6 @@ export class DevicesService {
   }
 
   async findOne(args: CommonAddressArgs) {
-    const device = await this.deviceModel.findOne({ address: args.address })
-    if (!device) throw new NotFoundException()
-
-    return device
+    return await getItem(this.deviceModel, 'address', args.address)
   }
 }

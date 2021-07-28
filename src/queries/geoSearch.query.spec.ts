@@ -77,7 +77,6 @@ describe('geoSearch query', () => {
 
   beforeAll(async () => {
     db = await Db.getInstance()
-
     await Db.insertTestData(db.connection, [testData])
   })
 
