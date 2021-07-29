@@ -46,7 +46,7 @@ export const indexesConfigs: IndexConfig[] = [
     fields: [
       { key: 'address', weight: 10 },
       { key: 'name', weight: 5 },
-      { key: 'description', weight: 5 }
+      { key: 'description', weight: 3 }
     ]
   },
   {
@@ -54,7 +54,7 @@ export const indexesConfigs: IndexConfig[] = [
     fields: [
       { key: 'address', weight: 10 },
       { key: 'name', weight: 5 },
-      { key: 'description', weight: 5 }
+      { key: 'description', weight: 3 }
     ]
   }
 ]

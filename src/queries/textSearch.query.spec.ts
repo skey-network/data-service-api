@@ -76,7 +76,7 @@ const cases = [
   }
 ]
 
-describe('geoSearch query', () => {
+describe('text search query', () => {
   let db: Db.TestInstance
 
   beforeAll(async () => {
