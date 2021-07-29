@@ -5,6 +5,7 @@ import { Organisation, OrganisationModel } from './organisations.schema'
 import { OrganisationsArgs, OrganisationFilterFields } from './organisations.args'
 import { filterPipeline } from '../queries/standardIndex.query'
 import { getItem, runQuery } from '../common/common.functions'
+import { textSearchPipeline } from '../queries/textSearch.query'
 
 @Injectable()
 export class OrganisationsService {
@@ -13,7 +14,10 @@ export class OrganisationsService {
   ) {}
 
   async findAll(args: OrganisationsArgs) {
-    const pipeline = filterPipeline(args.filter, OrganisationFilterFields)
+    const pipeline = [
+      ...textSearchPipeline(args.search),
+      ...filterPipeline(args.filter, OrganisationFilterFields)
+    ]
 
     return await runQuery(this.organisationModel, args, pipeline)
   }

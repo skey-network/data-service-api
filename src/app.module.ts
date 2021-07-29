@@ -7,6 +7,7 @@ import { OrganisationsModule } from './organisations/organisations.module'
 import { DevicesModule } from './devices/devices.module'
 import { KeysModule } from './keys/keys.module'
 import { EventsModule } from './events/events.module'
+import { UtilsModule } from './utils/utils.module'
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { EventsModule } from './events/events.module'
     OrganisationsModule,
     DevicesModule,
     KeysModule,
-    EventsModule
+    EventsModule,
+    UtilsModule
   ]
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Model } from 'mongoose'
-import { Field, ID, ObjectType } from '@nestjs/graphql'
+import { Field, Float, ID, ObjectType } from '@nestjs/graphql'
 import { Paginated } from '../common/common.interfaces'
 
 export type OrganisationDocument = Organisation & Document
@@ -39,6 +39,13 @@ export class Organisation {
   @Prop(Date)
   @Field(() => Date)
   updatedAt: Date
+
+  // ==============================
+  // GRAPHQL ONLY
+  // ==============================
+
+  @Field(() => Float, { nullable: true })
+  score?: number
 }
 
 @ObjectType()

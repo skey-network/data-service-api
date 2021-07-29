@@ -58,6 +58,9 @@ export class Key {
 
   @Field(() => Boolean, { nullable: true })
   whitelisted?: boolean
+
+  @Field(() => Float, { nullable: true })
+  score?: number
 }
 
 @ObjectType()

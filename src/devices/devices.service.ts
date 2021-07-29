@@ -11,6 +11,7 @@ import {
   whitelistedProp,
   WhitelistedPropInput
 } from '../queries/whitelistedProp.query'
+import { textSearchPipeline } from '../queries/textSearch.query'
 
 export const devicesWhitelistedPropInput: WhitelistedPropInput = {
   localId: 'address',
@@ -27,6 +28,7 @@ export class DevicesService {
 
   async findAll(args: DevicesArgs) {
     const pipeline = [
+      ...textSearchPipeline(args.search),
       ...keysOwnerPipeline(args.keysOwner),
       ...whitelistedProp(devicesWhitelistedPropInput),
       ...filterPipeline(args.filter, DeviceFilterFields),

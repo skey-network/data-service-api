@@ -17,6 +17,7 @@ type Supplier {
   whitelist: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  score: Float
 }
 
 """
@@ -38,6 +39,7 @@ type Organisation {
   users: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  score: Float
 }
 
 type PaginatedOrganisations {
@@ -85,6 +87,7 @@ type Device {
   createdAt: DateTime!
   updatedAt: DateTime!
   whitelisted: Boolean
+  score: Float
 }
 
 type PaginatedDevices {
@@ -105,6 +108,7 @@ type Key {
   createdAt: DateTime!
   updatedAt: DateTime!
   whitelisted: Boolean
+  score: Float
 }
 
 type PaginatedKeys {
@@ -122,6 +126,7 @@ type Event {
   status: String
   createdAt: DateTime!
   updatedAt: DateTime!
+  score: Float
 }
 
 type PaginatedEvents {
@@ -130,15 +135,16 @@ type PaginatedEvents {
 }
 
 type Query {
-  suppliers(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, filter: SuppliersFilter = {}): PaginatedSuppliers!
+  suppliers(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, search: String, filter: SuppliersFilter = {}): PaginatedSuppliers!
   supplier(address: String!): Supplier!
-  organisations(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, filter: OrganisationsFilter = {}): PaginatedOrganisations!
+  organisations(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, search: String, filter: OrganisationsFilter = {}): PaginatedOrganisations!
   organisation(address: String!): Organisation!
   devices(
     skip: Int = 0
     take: Int = 25
     order: String = "asc"
     orderBy: String
+    search: String
     filter: DevicesFilter = {}
 
     """
@@ -160,9 +166,9 @@ type Query {
     keysOwner: String
   ): PaginatedDevices!
   device(address: String!): Device!
-  keys(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, filter: KeysFilter = {}): PaginatedKeys!
+  keys(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, search: String, filter: KeysFilter = {}): PaginatedKeys!
   key(assetId: String!): Key!
-  events(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, filter: EventsFilter = {}): PaginatedEvents!
+  events(skip: Int = 0, take: Int = 25, order: String = "asc", orderBy: String, search: String, filter: EventsFilter = {}): PaginatedEvents!
   event(txHash: String!): Event!
 }
 

@@ -8,6 +8,7 @@ import {
   whitelistedProp,
   WhitelistedPropInput
 } from '../queries/whitelistedProp.query'
+import { textSearchPipeline } from '../queries/textSearch.query'
 
 export const keysWhitelistedPropInput: WhitelistedPropInput = {
   localId: 'assetId',
@@ -24,8 +25,9 @@ export class KeysService {
 
   async findAll(args: KeysArgs) {
     const pipeline = [
-      ...filterPipeline(args.filter, KeyFilterFields),
-      ...whitelistedProp(keysWhitelistedPropInput)
+      ...textSearchPipeline(args.search),
+      ...whitelistedProp(keysWhitelistedPropInput),
+      ...filterPipeline(args.filter, KeyFilterFields)
     ]
 
     return runQuery(this.keyModel, args, pipeline)
