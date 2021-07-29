@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Model } from 'mongoose'
-import { Field, ID, ObjectType } from '@nestjs/graphql'
+import { Field, Float, ID, ObjectType } from '@nestjs/graphql'
 import { Paginated } from '../common/common.interfaces'
 
 export type DeviceDocument = Device & Document
@@ -190,6 +190,9 @@ export class Device {
 
   @Field(() => Boolean, { nullable: true })
   whitelisted?: boolean
+
+  @Field(() => Float, { nullable: true })
+  score?: number
 }
 
 @ObjectType()

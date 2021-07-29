@@ -1,5 +1,5 @@
 import { ArgsType, Field, Int } from '@nestjs/graphql'
-import { IsOptional, IsString, Matches, Max, Min } from 'class-validator'
+import { IsOptional, IsString, Matches, Max, Min, MinLength } from 'class-validator'
 import config from '../config'
 import { IsBlockchainAddress } from './common.decorators'
 
@@ -22,6 +22,12 @@ export class CommonIndexArgs {
   @IsString()
   @IsOptional()
   orderBy?: string
+
+  @Field({ nullable: true })
+  @IsString()
+  @IsOptional()
+  @MinLength(3)
+  search?: string
 }
 
 @ArgsType()
