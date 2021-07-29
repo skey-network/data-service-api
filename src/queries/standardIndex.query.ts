@@ -25,11 +25,11 @@ export const paginationPipeline = <T extends CommonIndexArgs>(args: T) => [
 ]
 
 export const sortPipeline = <T extends CommonIndexArgs>(args: T) => {
+  if (!args.orderBy) return []
+
   const order = args.order === 'asc' ? 1 : -1
 
-  const doc = { $sort: { [args.orderBy]: order } }
-
-  return args.orderBy ? [doc] : []
+  return [{ $sort: { [args.orderBy]: order } }]
 }
 
 export const standardIndexPipeline = <T extends CommonIndexArgs>(
