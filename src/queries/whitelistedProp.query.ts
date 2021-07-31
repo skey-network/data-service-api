@@ -7,15 +7,6 @@ export interface WhitelistedPropInput {
   newFieldName: string
 }
 
-// example input {
-//   localId: assetId
-//   lookupCollection: devices
-//   localField: device
-//   foreignField: address
-//   foreignArray: whitelist
-//   newFieldName: whitelisted
-// }
-
 export const whitelistedProp = (input: WhitelistedPropInput) => {
   const LOOKUP_DOC = 'lookupDocTmp'
   const LOOKUP_ARR = 'lookupArrTmp'
