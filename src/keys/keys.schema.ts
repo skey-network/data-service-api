@@ -45,11 +45,11 @@ export class Key {
   burned?: boolean
 
   @Prop(Date)
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   createdAt: Date
 
   @Prop(Date)
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   updatedAt: Date
 
   // ==============================

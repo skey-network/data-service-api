@@ -5,6 +5,11 @@ export interface FilterField {
   value: any
 }
 
+export interface SortInput {
+  order: 'asc' | 'desc'
+  orderBy?: string
+}
+
 export const getFilterFields = <T extends any>(
   args: T,
   whitelist: readonly string[]
@@ -24,7 +29,7 @@ export const paginationPipeline = <T extends CommonIndexArgs>(args: T) => [
   { $limit: args.take }
 ]
 
-export const sortPipeline = <T extends CommonIndexArgs>(args: T) => {
+export const sortPipeline = <T extends SortInput>(args: T) => {
   if (!args.orderBy) return []
 
   const order = args.order === 'asc' ? 1 : -1

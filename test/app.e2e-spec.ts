@@ -8,7 +8,7 @@ import * as request from 'supertest'
 import { AppModule } from './../src/app.module'
 import config from '../src/config'
 import { Connection } from 'mongoose'
-import { connectToRealDb } from './db'
+import { connectToRealDb, insertTestData, removeTestData } from './db'
 
 const get = async (app: INestApplication, query: any) => {
   const res = await request(app.getHttpServer())
@@ -27,7 +27,8 @@ const cases = [
     singular: 'device',
     plural: 'devices',
     idField: 'address',
-    id: '3MFnBNTTCqQHuFX3H8p9ZWzccvLrwfBELkB'
+    id: '3MFnBNTTCqQHuFX3H8p9ZWzccvLrwfBELkB',
+    name: 'test'
   },
   {
     toString: () => 'events',
@@ -43,7 +44,8 @@ const cases = [
     plural: 'keys',
     id: 'C28XsGGGKbmqiMruZCuBBSuXDc4Hsx4NXdmygi8QDyWn',
     idField: 'assetId',
-    collection: 'keys'
+    collection: 'keys',
+    name: 'test'
   },
   {
     toString: () => 'organisations',
@@ -51,7 +53,8 @@ const cases = [
     plural: 'organisations',
     id: '3MQBMVe3htusKJTpf7vGHnu2c7Wd6XjNHvd',
     idField: 'address',
-    collection: 'organisations'
+    collection: 'organisations',
+    name: 'test'
   },
   {
     toString: () => 'suppliers',
@@ -59,7 +62,8 @@ const cases = [
     plural: 'suppliers',
     id: '3M1he2S9iiLqj4M4D9dG4BAGkMYvHwHEg87',
     idField: 'address',
-    collection: 'suppliers'
+    collection: 'suppliers',
+    name: 'test'
   }
 ]
 
@@ -104,6 +108,33 @@ describe('AppController (e2e)', () => {
       const res = await get(app, query)
 
       expect(res[args.plural].objects.length).toBeGreaterThanOrEqual(1)
+    })
+  })
+
+  describe('search', () => {
+    const fields = cases.map((x) => `${x.plural}{${x.idField}}`)
+    const query = `search(input:\\"test\\"){${fields.join()}}`
+
+    const items = cases.map((c) => ({
+      collection: c.plural,
+      objects: [{ [c.idField]: c.id, name: c.name }]
+    }))
+
+    beforeEach(async () => {
+      await insertTestData(conn, items)
+    })
+
+    afterEach(async () => {
+      await removeTestData(conn, items)
+    })
+
+    it('returns items', async () => {
+      const res = await get(app, query)
+
+      expect(res.search.devices.length).toBe(1)
+      expect(res.search.keys.length).toBe(1)
+      expect(res.search.organisations.length).toBe(1)
+      expect(res.search.suppliers.length).toBe(1)
     })
   })
 })

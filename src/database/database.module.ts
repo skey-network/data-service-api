@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
 import type { ConnectOptions } from 'mongoose'
 import config from '../config'
+import { DatabaseService } from './database.service'
 
 export interface DatabaseOptions {
   host: string
@@ -26,7 +27,10 @@ export const options: ConnectOptions = Object.freeze({
 
 const uri = createUri(config().database)
 
+@Global()
 @Module({
-  imports: [MongooseModule.forRoot(uri, options)]
+  imports: [MongooseModule.forRoot(uri, options)],
+  providers: [DatabaseService],
+  exports: [DatabaseService]
 })
 export class DatabaseModule {}

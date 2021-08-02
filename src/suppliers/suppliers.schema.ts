@@ -33,11 +33,11 @@ export class Supplier {
   whitelist?: string[]
 
   @Prop(Date)
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   createdAt: Date
 
   @Prop(Date)
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   updatedAt: Date
 
   // ==============================

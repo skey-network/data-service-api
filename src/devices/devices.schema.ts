@@ -177,11 +177,11 @@ export class Device {
   // ==============================
 
   @Prop(Date)
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   createdAt: Date
 
   @Prop(Date)
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   updatedAt: Date
 
   // ==============================

@@ -2,6 +2,8 @@ import { Document } from 'mongoose'
 import { Type } from '@nestjs/common'
 import { Field, Int, ObjectType } from '@nestjs/graphql'
 
+export type Pipeline = any[]
+
 export interface QueryResult<T extends Document> {
   objects: T[]
   meta: Meta
