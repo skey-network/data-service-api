@@ -15,7 +15,10 @@ export const getFilterFields = <T extends any>(
   whitelist: readonly string[]
 ): FilterField[] =>
   Object.entries(args)
-    .filter(([key, value]) => whitelist.includes(key) && value !== undefined)
+    .filter(
+      ([key, value]) =>
+        whitelist.includes(key) && value !== undefined && value !== null
+    )
     .map(([key, value]) => ({ field: key, value }))
 
 export const filterPipeline = <T extends any>(
