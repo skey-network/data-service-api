@@ -61,6 +61,9 @@ export class Key {
 
   @Field(() => Float, { nullable: true })
   score?: number
+
+  @Field(() => String, { nullable: true })
+  deviceName?: string
 }
 
 @ObjectType()
