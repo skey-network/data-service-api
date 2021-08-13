@@ -15,6 +15,7 @@ type Supplier {
   name: String
   description: String
   whitelist: [String!]!
+  organisations: [String!]!
   createdAt: DateTime
   updatedAt: DateTime
   score: Float

@@ -32,6 +32,10 @@ export class Supplier {
   @Field(() => [String], { defaultValue: [] })
   whitelist?: string[]
 
+  @Prop([String])
+  @Field(() => [String], { defaultValue: [] })
+  organisations?: string[]
+
   @Prop(Date)
   @Field(() => Date, { nullable: true })
   createdAt: Date
