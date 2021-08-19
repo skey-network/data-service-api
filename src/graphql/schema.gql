@@ -146,6 +146,104 @@ type SearchResults {
   meta: Meta!
 }
 
+type DevicesStats {
+  all: Float
+  active_false: Float
+  active_true: Float
+  connected_false: Float
+  connected_true: Float
+  visible_false: Float
+  visible_true: Float
+}
+
+type EventsStats {
+  all: Float
+}
+
+type KeysStats {
+  all: Float
+  burned_false: Float
+  burned_true: Float
+}
+
+type OrganisationsStats {
+  whitelisted: Float
+}
+
+type UsersStats {
+  whitelisted: Float
+}
+
+type SuppliersData {
+  devices: DevicesStats!
+  events: EventsStats!
+  keys: KeysStats!
+  organisations: OrganisationsStats!
+}
+
+type OrganisationsData {
+  devices: DevicesStats!
+  keys: KeysStats!
+  users: UsersStats!
+}
+
+type KeysData {
+  events: EventsStats!
+}
+
+type DevicesData {
+  events: EventsStats!
+  keys: KeysStats!
+}
+
+type SupplierSubDocument {
+  timestamp: Float
+  data: SuppliersData
+}
+
+type OrganisationSubDocument {
+  timestamp: Float
+  data: OrganisationsData
+}
+
+type DeviceSubDocument {
+  timestamp: Float
+  data: DevicesData
+}
+
+type KeySubDocument {
+  timestamp: Float
+  data: KeysData
+}
+
+type SupplierMainDocument {
+  id: String
+  type: String
+  current: SupplierSubDocument
+  historical: [SupplierSubDocument!]
+}
+
+type OrganisationMainDocument {
+  id: String
+  type: String
+  current: OrganisationSubDocument
+  historical: [OrganisationSubDocument!]
+}
+
+type DeviceMainDocument {
+  id: String
+  type: String
+  current: DeviceSubDocument
+  historical: [DeviceSubDocument!]
+}
+
+type KeyMainDocument {
+  id: String
+  type: String
+  current: KeySubDocument
+  historical: [KeySubDocument!]
+}
+
 type Query {
   suppliers(
     """
@@ -358,6 +456,10 @@ type Query {
     take: Int = 25
     input: String!
   ): SearchResults!
+  supplierStats(id: String!): SupplierMainDocument!
+  organisationStats(id: String!): OrganisationMainDocument!
+  deviceStats(id: String!): DeviceMainDocument!
+  keyStats(id: String!): KeyMainDocument!
 }
 
 input SuppliersFilter {

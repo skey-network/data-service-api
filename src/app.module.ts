@@ -9,6 +9,7 @@ import { KeysModule } from './keys/keys.module'
 import { EventsModule } from './events/events.module'
 import { UtilsModule } from './utils/utils.module'
 import { SearchModule } from './search/search.module'
+import { StatsModule } from './stats/stats.module'
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { SearchModule } from './search/search.module'
     KeysModule,
     EventsModule,
     UtilsModule,
-    SearchModule
+    SearchModule,
+    StatsModule
   ]
 })
 export class AppModule {}
