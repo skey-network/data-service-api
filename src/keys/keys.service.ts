@@ -44,7 +44,8 @@ export class KeysService {
     return await this.databaseService.findOne(
       this.keyModel.collection,
       'assetId',
-      args.assetId
+      args.assetId,
+      [...whitelistedProp(keysWhitelistedPropInput), ...appendDeviceName()]
     )
   }
 }
