@@ -15,7 +15,9 @@ const testData: Db.TestCollection[] = [
       { address: 'device_2' },
       { address: 'device_3' },
       { address: 'device_4' },
-      { address: 'device_5' }
+      { address: 'device_5' },
+      { address: 'device_6', removed: true },
+      { address: 'device_7', removed: false }
     ]
   },
   {
@@ -25,25 +27,43 @@ const testData: Db.TestCollection[] = [
       { assetId: 'key_2', owner: 'user_2', device: 'device_2' },
       { assetId: 'key_3', owner: 'user_2', device: 'device_3' },
       { assetId: 'key_4', owner: 'user_2', device: 'device_3' },
-      { assetId: 'key_5', owner: 'user_2', device: 'device_4' }
+      { assetId: 'key_5', owner: 'user_2', device: 'device_4' },
+      { assetId: 'key_6', owner: 'user_3', device: 'device_5' },
+      { assetId: 'key_7', owner: 'user_3', device: 'device_6' },
+      { assetId: 'key_8', owner: 'user_3', device: 'device_7' }
     ]
   }
 ]
 
 const cases = [
   {
-    toString: () => 'user_1',
+    toString: () => 'One device',
     owner: 'user_1',
+    includeRemoved: false,
     expected: ['device_1']
   },
   {
-    toString: () => 'user_2',
+    toString: () => 'Multiple devices',
     owner: 'user_2',
+    includeRemoved: false,
     expected: ['device_2', 'device_3', 'device_4']
   },
   {
-    toString: () => 'user_3',
+    toString: () => 'No disabled devices',
     owner: 'user_3',
+    includeRemoved: false,
+    expected: ['device_5', 'device_7']
+  },
+  {
+    toString: () => 'Includes disabled devices when queried with flag',
+    owner: 'user_3',
+    includeRemoved: true,
+    expected: ['device_5', 'device_6', 'device_7']
+  },
+  {
+    toString: () => 'No devices',
+    owner: 'user_4',
+    includeRemoved: false,
     expected: []
   }
 ]
@@ -63,8 +83,8 @@ describe('forKeysOwner query', () => {
     await db.cleanup()
   })
 
-  it.each(cases)('%s', async ({ owner, expected }) => {
-    const pipeline = keysOwnerPipeline(owner)
+  it.each(cases)('%s', async ({ owner, expected, includeRemoved }) => {
+    const pipeline = keysOwnerPipeline(owner, includeRemoved)
 
     const results = await deviceModel.aggregate(pipeline)
 

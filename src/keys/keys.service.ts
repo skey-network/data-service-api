@@ -10,7 +10,7 @@ import {
 import { textSearchPipeline } from '../queries/textSearch.query'
 import { sortPipeline } from '../queries/standardIndex.query'
 import { DatabaseService } from '../database/database.service'
-import { appendDeviceName } from 'src/queries/appendDeviceName.query'
+import { appendDeviceName } from '../queries/appendDeviceName.query'
 
 export const keysWhitelistedPropInput: WhitelistedPropInput = {
   localId: 'assetId',
