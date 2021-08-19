@@ -5,7 +5,16 @@ import { Meta, Pipeline } from '../common/common.interfaces'
 
 @Injectable()
 export class DatabaseService {
-  async findOne(collection: Collection, idField: string, id: string) {
+  async findOne(
+    collection: Collection,
+    idField: string,
+    id: string,
+    pipeline?: Pipeline
+  ) {
+    if (pipeline) {
+      return await this.findOneByAggregation(collection, idField, id, pipeline)
+    }
+
     const doc = await collection.findOne({ [idField]: id } as any)
     if (!doc) throw new NotFoundException()
 
@@ -42,5 +51,26 @@ export class DatabaseService {
         }
       }
     ]
+  }
+
+  private async findOneByAggregation(
+    collection: Collection,
+    idField: string,
+    id: string,
+    pipeline: Pipeline
+  ) {
+    const result = await collection
+      .aggregate([...this.findOnePipeline(idField, id), ...pipeline])
+      .toArray()
+
+    if (result.length === 0) {
+      throw new NotFoundException()
+    }
+
+    return result[0]
+  }
+
+  private findOnePipeline(idField: string, id: string): Pipeline {
+    return [{ $match: { [idField]: id } }, { $limit: 1 }]
   }
 }

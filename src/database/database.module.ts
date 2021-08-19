@@ -14,7 +14,7 @@ export interface DatabaseOptions {
 
 export const createUri = (options: DatabaseOptions) => {
   const { host, port, name, username, password } = options
-  return `mongodb://${username}:${password}@${host}:${port}/${name}`
+  return `mongodb://${username}:${password}@${host}:${port}/${name}?authsource=admin`
 }
 
 export const options: ConnectOptions = Object.freeze({

@@ -8,7 +8,7 @@ import { DevicesModule } from './devices/devices.module'
 import { KeysModule } from './keys/keys.module'
 import { EventsModule } from './events/events.module'
 import { UtilsModule } from './utils/utils.module'
-import { SearchModule } from './search/search.module';
+import { SearchModule } from './search/search.module'
 
 @Module({
   imports: [
