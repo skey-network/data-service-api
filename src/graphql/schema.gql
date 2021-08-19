@@ -233,6 +233,7 @@ type Query {
     """
     take: Int = 25
     filter: OrganisationsFilter = {}
+    supplier: String
   ): PaginatedOrganisations!
   organisation(address: String!): Organisation!
   devices(
