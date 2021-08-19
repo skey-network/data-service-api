@@ -5,6 +5,7 @@ import { Organisation, OrganisationModel } from './organisations.schema'
 import { OrganisationsArgs, OrganisationFilterFields } from './organisations.args'
 import { filterPipeline } from '../queries/standardIndex.query'
 import { textSearchPipeline } from '../queries/textSearch.query'
+import { supplierOrganisationsPipeline } from '../queries/supplierOrganisations.query'
 import { sortPipeline } from '../queries/standardIndex.query'
 import { DatabaseService } from '../database/database.service'
 
@@ -16,11 +17,15 @@ export class OrganisationsService {
   ) {}
 
   async findAll(args: OrganisationsArgs) {
-    const pipeline = [
+    let pipeline: any[] = [
       ...textSearchPipeline(args.search),
       ...filterPipeline(args.filter, OrganisationFilterFields),
       ...sortPipeline(args)
     ]
+
+    if (args.supplier) {
+      pipeline = [...pipeline, ...supplierOrganisationsPipeline(args.supplier)]
+    }
 
     return await this.databaseService.query(
       this.organisationModel.collection,
