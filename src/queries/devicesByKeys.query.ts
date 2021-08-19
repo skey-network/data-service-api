@@ -1,10 +1,10 @@
-export const keysOwnerPipeline = (owner?: string) => {
+export const keysOwnerPipeline = (owner?: string, includeRemoved?: boolean) => {
   if (!owner) return []
 
   const KEYS_TMP = 'keysTmp'
   const OWNERS_TMP = 'ownersTmp'
 
-  return [
+  let query: any[] = [
     {
       $lookup: {
         from: 'keys',
@@ -35,4 +35,16 @@ export const keysOwnerPipeline = (owner?: string) => {
     },
     { $unset: OWNERS_TMP }
   ]
+
+  if (!includeRemoved) {
+    query.push({
+      $match: {
+        removed: {
+          $ne: true
+        }
+      }
+    })
+  }
+
+  return query
 }

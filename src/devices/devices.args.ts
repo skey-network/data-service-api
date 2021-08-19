@@ -21,6 +21,11 @@ const geoSearchDescription = `
   as bottomLeft and [lat:54, lng:24] as upperRight, it's going to return all devices in Poland.
 `
 
+const includeRemovedDescription = `
+  By default the list will not include Devices which have been removed by the Supplier.
+  To also get removed Devices, set this flag to true.
+`
+
 @InputType()
 export class Point {
   @Field(() => Float)
@@ -90,6 +95,14 @@ export class DevicesArgs extends CommonIndexArgs {
   @IsBlockchainAddress()
   @IsOptional()
   keysOwner?: string
+
+  @Field(() => Boolean, {
+    nullable: true,
+    description: includeRemovedDescription,
+    defaultValue: false
+  })
+  @IsOptional()
+  includeRemoved?: boolean
 }
 
 @ArgsType()

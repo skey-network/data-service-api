@@ -148,6 +148,10 @@ export class Device {
   @Field(() => Boolean, { nullable: true })
   connected?: boolean
 
+  @Prop(Boolean)
+  @Field(() => Boolean, { nullable: true })
+  removed?: boolean
+
   // ==============================
   // ADDITIONAL INFO
   // ==============================

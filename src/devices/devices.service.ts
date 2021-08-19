@@ -33,7 +33,7 @@ export class DevicesService {
   async findAll(args: DevicesArgs) {
     const pipeline = [
       ...textSearchPipeline(args.search),
-      ...keysOwnerPipeline(args.keysOwner),
+      ...keysOwnerPipeline(args.keysOwner, args.includeRemoved),
       ...whitelistedProp(devicesWhitelistedPropInput),
       ...filterPipeline(args.filter, DeviceFilterFields),
       ...geoSearchPipeline(args.geoSearch),

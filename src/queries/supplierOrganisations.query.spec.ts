@@ -1,5 +1,5 @@
 import * as Db from '../../test/db'
-import { supplierOrganisationsQuery } from './supplierOrganisations.query'
+import { supplierOrganisationsPipeline } from './supplierOrganisations.query'
 import * as Util from 'util'
 import { util } from 'prettier'
 
@@ -56,7 +56,7 @@ describe('index query', () => {
 
   it.each(cases)('%s', async ({ supplier, expected }) => {
     const collection = db.connection.collection('organisations')
-    const pipeline = [...supplierOrganisationsQuery(supplier)]
+    const pipeline = [...supplierOrganisationsPipeline(supplier)]
 
     const results = await (
       await collection.aggregate(pipeline).toArray()
