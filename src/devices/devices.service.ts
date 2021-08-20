@@ -13,6 +13,7 @@ import {
 import { textSearchPipeline } from '../queries/textSearch.query'
 import { sortPipeline } from '../queries/standardIndex.query'
 import { DatabaseService } from '../database/database.service'
+import GeoSearchCirclePipeline from '../queries/geoSearchCircle.query'
 
 export const devicesWhitelistedPropInput: WhitelistedPropInput = {
   localId: 'address',
@@ -31,14 +32,7 @@ export class DevicesService {
   ) {}
 
   async findAll(args: DevicesArgs) {
-    const pipeline = [
-      ...textSearchPipeline(args.search),
-      ...keysOwnerPipeline(args.keysOwner, args.includeRemoved),
-      ...whitelistedProp(devicesWhitelistedPropInput),
-      ...filterPipeline(args.filter, DeviceFilterFields),
-      ...geoSearchPipeline(args.geoSearch),
-      ...sortPipeline(args)
-    ]
+    const pipeline = this.buildFindAllPipeline(args)
 
     return await this.databaseService.query(
       this.deviceModel.collection,
@@ -53,5 +47,17 @@ export class DevicesService {
       'address',
       args.address
     )
+  }
+
+  private buildFindAllPipeline(args: DevicesArgs) {
+    return [
+      ...textSearchPipeline(args.search),
+      ...keysOwnerPipeline(args.keysOwner, args.includeRemoved),
+      ...whitelistedProp(devicesWhitelistedPropInput),
+      ...filterPipeline(args.filter, DeviceFilterFields),
+      ...geoSearchPipeline(args.geoSearch),
+      ...GeoSearchCirclePipeline(args.geoSearchCircle),
+      ...sortPipeline(args)
+    ]
   }
 }

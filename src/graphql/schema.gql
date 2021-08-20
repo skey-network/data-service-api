@@ -82,7 +82,7 @@ type Device {
   visible: Boolean
   active: Boolean
   connected: Boolean
-  removed: String
+  removed: Boolean
   details: Details
   custom: String
   whitelist: [String!]!
@@ -357,6 +357,11 @@ type Query {
     geoSearch: GeoSearchInput
 
     """
+    Returns list of devices within radius of a selected point.
+    """
+    geoSearchCircle: GeoSearchCircleInput
+
+    """
     Returns list of devices to which an address has keys. For example, User with address user_1 is
     the owner of keys key_1 and key_2, key_1 is for device_1 and key_2 is for device_2. There are
     also user_2, device_3 and key_3. The method will return [device_1, device_2]. This is helpful
@@ -487,6 +492,15 @@ input GeoSearchInput {
 input Point {
   lat: Float!
   lng: Float!
+}
+
+input GeoSearchCircleInput {
+  center: Point!
+
+  """
+  Radius of a circle in meters.
+  """
+  radius: Float!
 }
 
 input KeysFilter {
