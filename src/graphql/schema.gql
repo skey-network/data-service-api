@@ -48,6 +48,11 @@ type PaginatedOrganisations {
   meta: Meta!
 }
 
+type Location {
+  type: String!
+  coordinates: [Float!]!
+}
+
 type PhysicalAddress {
   addressLine1: String
   addressLine2: String
@@ -79,6 +84,15 @@ type Device {
   lat: Float
   lng: Float
   alt: Float
+  location: Location
+
+  """
+  
+    Returned only when fetching Devices from a circle using geoSearchCircle.
+    This is the distance between the Device and a chosen point measured in meters.
+  
+  """
+  distance: Float
   visible: Boolean
   active: Boolean
   connected: Boolean
@@ -247,34 +261,44 @@ type KeyMainDocument {
 type Query {
   suppliers(
     """
-    Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
-    for descending
+    
+      Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
+      for descending
+    
     """
     order: String = "asc"
 
     """
-    Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns
-    last updated items first.
+    
+      Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns 
+      last updated items first.
+    
     """
     orderBy: String
 
     """
-    User to search for match in multiple fields. It appends new field (score) to returned items.
-    For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
-    "teltonika" string in one of the fields and places best matches first.
+    
+      User to search for match in multiple fields. It appends new field (score) to returned items.
+      For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
+      "teltonika" string in one of the fields and places best matches first.
+    
     """
     search: String
 
     """
-    Used for pagination. Indicates how many records starting from the first one should be skipped.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
+      Used for pagination. Indicates how many records starting from the first one should be skipped.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
     """
     skip: Int = 0
 
     """
-    Used for pagination. Indicates how many records should be returned in the current request.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
-    is 25. Maximum amount is 1000
+    
+      Used for pagination. Indicates how many records should be returned in the current request.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
+      is 25. Maximum amount is 1000
+    
     """
     take: Int = 25
     filter: SuppliersFilter = {}
@@ -282,34 +306,44 @@ type Query {
   supplier(address: String!): Supplier!
   organisations(
     """
-    Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
-    for descending
+    
+      Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
+      for descending
+    
     """
     order: String = "asc"
 
     """
-    Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns
-    last updated items first.
+    
+      Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns 
+      last updated items first.
+    
     """
     orderBy: String
 
     """
-    User to search for match in multiple fields. It appends new field (score) to returned items.
-    For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
-    "teltonika" string in one of the fields and places best matches first.
+    
+      User to search for match in multiple fields. It appends new field (score) to returned items.
+      For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
+      "teltonika" string in one of the fields and places best matches first.
+    
     """
     search: String
 
     """
-    Used for pagination. Indicates how many records starting from the first one should be skipped.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
+      Used for pagination. Indicates how many records starting from the first one should be skipped.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
     """
     skip: Int = 0
 
     """
-    Used for pagination. Indicates how many records should be returned in the current request.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
-    is 25. Maximum amount is 1000
+    
+      Used for pagination. Indicates how many records should be returned in the current request.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
+      is 25. Maximum amount is 1000
+    
     """
     take: Int = 25
     filter: OrganisationsFilter = {}
@@ -318,94 +352,122 @@ type Query {
   organisation(address: String!): Organisation!
   devices(
     """
-    Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
-    for descending
+    
+      Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
+      for descending
+    
     """
     order: String = "asc"
 
     """
-    Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns
-    last updated items first.
+    
+      Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns 
+      last updated items first.
+    
     """
     orderBy: String
 
     """
-    User to search for match in multiple fields. It appends new field (score) to returned items.
-    For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
-    "teltonika" string in one of the fields and places best matches first.
+    
+      User to search for match in multiple fields. It appends new field (score) to returned items.
+      For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
+      "teltonika" string in one of the fields and places best matches first.
+    
     """
     search: String
 
     """
-    Used for pagination. Indicates how many records starting from the first one should be skipped.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
+      Used for pagination. Indicates how many records starting from the first one should be skipped.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
     """
     skip: Int = 0
 
     """
-    Used for pagination. Indicates how many records should be returned in the current request.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
-    is 25. Maximum amount is 1000
+    
+      Used for pagination. Indicates how many records should be returned in the current request.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
+      is 25. Maximum amount is 1000
+    
     """
     take: Int = 25
     filter: DevicesFilter = {}
 
     """
-    Retruns list of devices that are inside of selected rectangle. For example, for points [lat:49, lng: 16]
-    as bottomLeft and [lat:54, lng:24] as upperRight, it's going to return all devices in Poland.
+    
+      Retruns list of devices that are inside of selected rectangle. For example, for points [lat:49, lng: 16]
+      as bottomLeft and [lat:54, lng:24] as upperRight, it's going to return all devices in Poland.
+    
     """
     geoSearch: GeoSearchInput
 
     """
-    Returns list of devices within radius of a selected point.
+    
+      Returns list of devices within radius of a selected point.
+    
     """
     geoSearchCircle: GeoSearchCircleInput
 
     """
-    Returns list of devices to which an address has keys. For example, User with address user_1 is
-    the owner of keys key_1 and key_2, key_1 is for device_1 and key_2 is for device_2. There are
-    also user_2, device_3 and key_3. The method will return [device_1, device_2]. This is helpful
-    when user need a list of devices he can interact with.
+    
+      Returns list of devices to which an address has keys. For example, User with address user_1 is
+      the owner of keys key_1 and key_2, key_1 is for device_1 and key_2 is for device_2. There are
+      also user_2, device_3 and key_3. The method will return [device_1, device_2]. This is helpful
+      when user need a list of devices he can interact with.
+    
     """
     keysOwner: String
 
     """
-    By default the list will not include Devices which have been removed by the Supplier.
-    To also get removed Devices, set this flag to true.
+    
+      By default the list will not include Devices which have been removed by the Supplier.
+      To also get removed Devices, set this flag to true.
+    
     """
     includeRemoved: Boolean = false
   ): PaginatedDevices!
   device(address: String!): Device!
   keys(
     """
-    Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
-    for descending
+    
+      Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
+      for descending
+    
     """
     order: String = "asc"
 
     """
-    Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns
-    last updated items first.
+    
+      Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns 
+      last updated items first.
+    
     """
     orderBy: String
 
     """
-    User to search for match in multiple fields. It appends new field (score) to returned items.
-    For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
-    "teltonika" string in one of the fields and places best matches first.
+    
+      User to search for match in multiple fields. It appends new field (score) to returned items.
+      For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
+      "teltonika" string in one of the fields and places best matches first.
+    
     """
     search: String
 
     """
-    Used for pagination. Indicates how many records starting from the first one should be skipped.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
+      Used for pagination. Indicates how many records starting from the first one should be skipped.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
     """
     skip: Int = 0
 
     """
-    Used for pagination. Indicates how many records should be returned in the current request.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
-    is 25. Maximum amount is 1000
+    
+      Used for pagination. Indicates how many records should be returned in the current request.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
+      is 25. Maximum amount is 1000
+    
     """
     take: Int = 25
     filter: KeysFilter = {}
@@ -413,34 +475,44 @@ type Query {
   key(assetId: String!): Key!
   events(
     """
-    Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
-    for descending
+    
+      Order in which records will be sorted. Correct values are "asc" for ascending and "desc"
+      for descending
+    
     """
     order: String = "asc"
 
     """
-    Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns
-    last updated items first.
+    
+      Field name used for sorting. For example { order: "desc", orderBy: "updatedAt" } returns 
+      last updated items first.
+    
     """
     orderBy: String
 
     """
-    User to search for match in multiple fields. It appends new field (score) to returned items.
-    For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
-    "teltonika" string in one of the fields and places best matches first.
+    
+      User to search for match in multiple fields. It appends new field (score) to returned items.
+      For example query devices { search: "teltonika", order: "desc", orderby: "score" } returns devices that have
+      "teltonika" string in one of the fields and places best matches first.
+    
     """
     search: String
 
     """
-    Used for pagination. Indicates how many records starting from the first one should be skipped.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
+      Used for pagination. Indicates how many records starting from the first one should be skipped.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
     """
     skip: Int = 0
 
     """
-    Used for pagination. Indicates how many records should be returned in the current request.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
-    is 25. Maximum amount is 1000
+    
+      Used for pagination. Indicates how many records should be returned in the current request.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
+      is 25. Maximum amount is 1000
+    
     """
     take: Int = 25
     filter: EventsFilter = {}
@@ -448,15 +520,19 @@ type Query {
   event(txHash: String!): Event!
   search(
     """
-    Used for pagination. Indicates how many records starting from the first one should be skipped.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
+      Used for pagination. Indicates how many records starting from the first one should be skipped.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page.
+    
     """
     skip: Int = 0
 
     """
-    Used for pagination. Indicates how many records should be returned in the current request.
-    For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
-    is 25. Maximum amount is 1000
+    
+      Used for pagination. Indicates how many records should be returned in the current request.
+      For example, { skip: 20, take: 10 } equals 3 page and 10 items for each page. Default value
+      is 25. Maximum amount is 1000
+    
     """
     take: Int = 25
     input: String!
@@ -498,7 +574,9 @@ input GeoSearchCircleInput {
   center: Point!
 
   """
-  Radius of a circle in meters.
+  
+    Radius of a circle in meters.
+  
   """
   radius: Float!
 }

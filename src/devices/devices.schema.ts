@@ -14,6 +14,23 @@ export type DeviceType =
   | 'mobile'
   | 'other'
 
+const distanceDescription = `
+  Returned only when fetching Devices from a circle using geoSearchCircle.
+  This is the distance between the Device and a chosen point measured in meters.
+`
+
+@Schema()
+@ObjectType()
+export class Location {
+  @Prop(String)
+  @Field(() => String)
+  type: 'Point'
+
+  @Prop([Number])
+  @Field(() => [Number])
+  coordinates: number[]
+}
+
 @Schema()
 @ObjectType()
 export class PhysicalAddress {
@@ -131,6 +148,14 @@ export class Device {
   @Prop(Number)
   @Field(() => Number, { nullable: true })
   alt?: number
+
+  @Prop(Location)
+  @Field(() => Location, { nullable: true })
+  location?: Location
+
+  @Prop(Number)
+  @Field(() => Number, { nullable: true, description: distanceDescription })
+  distance?: number
 
   // ==============================
   // BOOLEANS

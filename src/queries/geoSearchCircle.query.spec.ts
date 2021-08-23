@@ -2,8 +2,17 @@ import { GeoSearchCircleInput, Point } from '../devices/devices.args'
 import * as Db from '../../test/db'
 import geoSearchCirclePipeline from './geoSearchCircle.query'
 import { computeDestinationPoint } from 'geolib'
+import { Logger } from '@nestjs/common'
+import { IndexConfig } from '../utils/index.config'
+import { IndexService } from '../utils/index.service'
 
 const COLLECTION_NAME = 'devices'
+
+const indexConfig: IndexConfig = {
+  collection: COLLECTION_NAME,
+  type: '2dsphere',
+  fields: ['location']
+}
 
 const getRandomInt = (min: number, max: number): number => {
   min = Math.ceil(min)
@@ -17,7 +26,7 @@ const getRandomPointInDistance = (center: Point, distance: number) => {
 
 const center = { lng: 20.47958, lat: 53.77864 }
 
-const distances = [20, 50, 100, 200, 500, 1000, 10000]
+const distances = [50, 20, 210, 65, 90, 40, 330]
 
 const devicesAround = distances.map((distance: number, i: number) => {
   const cords = getRandomPointInDistance(center, distance)
@@ -25,7 +34,11 @@ const devicesAround = distances.map((distance: number, i: number) => {
     id: i + 1,
     name: `DEVICE_${distance}`,
     lat: cords.latitude,
-    lng: cords.longitude
+    lng: cords.longitude,
+    location: {
+      type: 'Point',
+      coordinates: [cords.longitude, cords.latitude]
+    }
   }
 })
 
@@ -41,14 +54,14 @@ const cases = [
     expected: []
   },
   {
-    toString: () => 'returns Devices within 150 meters',
+    toString: () => 'returns Devices within 150 meters sorted by distance',
     args: { center, radius: 150 },
-    expected: [1, 2, 3]
+    expected: [2, 6, 1, 4, 5]
   },
   {
-    toString: () => 'returns Devices within 300 meters',
+    toString: () => 'returns Devices within 300 meters sorted by distance',
     args: { center, radius: 300 },
-    expected: [1, 2, 3, 4]
+    expected: [2, 6, 1, 4, 5, 3]
   }
 ]
 
@@ -56,8 +69,13 @@ describe('geoSearchCircle query', () => {
   let db: Db.TestInstance
 
   beforeAll(async () => {
+    Logger.overrideLogger(false)
+
     db = await Db.getInstance()
     await Db.insertTestData(db.connection, [testData])
+
+    const service = new IndexService(db.connection)
+    await service.handleIndexes([indexConfig])
   })
 
   afterAll(async () => {

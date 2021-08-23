@@ -8,6 +8,7 @@ const COLLECTION_NAME = 'items'
 
 const indexConfig: IndexConfig = {
   collection: 'items',
+  type: 'textSearch',
   fields: [
     { key: 'address', weight: 10 },
     { key: 'name', weight: 5 },
