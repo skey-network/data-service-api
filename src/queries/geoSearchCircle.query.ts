@@ -15,7 +15,6 @@ export const GeoSearchCirclePipeline = (input?: GeoSearchCircleInput): Pipeline 
         },
         distanceField: 'distance',
         maxDistance: input.radius,
-        spherical: true,
         key: 'location'
       }
     }
