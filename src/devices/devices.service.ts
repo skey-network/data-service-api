@@ -51,12 +51,12 @@ export class DevicesService {
 
   private buildFindAllPipeline(args: DevicesArgs) {
     return [
+      ...GeoSearchCirclePipeline(args.geoSearchCircle),
       ...textSearchPipeline(args.search),
       ...keysOwnerPipeline(args.keysOwner, args.includeRemoved),
       ...whitelistedProp(devicesWhitelistedPropInput),
       ...filterPipeline(args.filter, DeviceFilterFields),
       ...geoSearchPipeline(args.geoSearch),
-      ...GeoSearchCirclePipeline(args.geoSearchCircle),
       ...sortPipeline(args)
     ]
   }
