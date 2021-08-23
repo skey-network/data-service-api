@@ -1,5 +1,5 @@
 import { Type } from '@nestjs/common'
-import { Field, Float, ObjectType } from '@nestjs/graphql'
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql'
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
 import { Document, Model, Types } from 'mongoose'
 
@@ -167,6 +167,22 @@ export const StatsMainDocument = <T>(classRef: Type<T>): any => {
   return Tmp
 }
 
+export const StatsChartDocument = <T>(classRef: Type<T>): any => {
+  @ObjectType()
+  class Tmp {
+    @Field(() => Int, { nullable: true })
+    index: number
+
+    @Field(() => Float, { nullable: true })
+    timestamp: number
+
+    @Field(() => classRef, { nullable: true })
+    data: T
+  }
+
+  return Tmp
+}
+
 // ==================================================
 // Response types
 // ==================================================
@@ -196,3 +212,17 @@ export class DeviceMainDocument extends StatsMainDocument(DeviceSubDocument) {}
 
 @ObjectType()
 export class KeyMainDocument extends StatsMainDocument(KeySubDocument) {}
+
+@ObjectType()
+export class SupplierChartDocument extends StatsChartDocument(SuppliersData) {}
+
+@ObjectType()
+export class OrganisationChartDocument extends StatsChartDocument(
+  OrganisationsData
+) {}
+
+@ObjectType()
+export class DeviceChartDocument extends StatsChartDocument(DevicesData) {}
+
+@ObjectType()
+export class KeyChartDocument extends StatsChartDocument(KeysData) {}
