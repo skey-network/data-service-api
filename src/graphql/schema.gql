@@ -126,6 +126,7 @@ type Key {
   whitelisted: Boolean
   score: Float
   deviceName: String
+  deviceWhitelisted: Boolean
 }
 
 type PaginatedKeys {
@@ -691,6 +692,11 @@ input KeysFilter {
   name: String
   device: String
   burned: Boolean
+
+  """
+  Filter keys by supplier device whitelist. For example, if set to true, this willreturn only keys for devices that are whitelisted by their suppliers. If set to false,it will return only keys for devices that are not whitelisted by their suppliers.If not given, it's not filtered at all.
+  """
+  deviceWhitelisted: Boolean
 }
 
 input EventsFilter {
