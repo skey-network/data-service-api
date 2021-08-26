@@ -11,6 +11,7 @@ import { textSearchPipeline } from '../queries/textSearch.query'
 import { sortPipeline } from '../queries/standardIndex.query'
 import { DatabaseService } from '../database/database.service'
 import { appendDeviceName } from '../queries/appendDeviceName.query'
+import { appendDeviceWhitelisted } from '../queries/appendDeviceWhitelisted.query'
 
 export const keysWhitelistedPropInput: WhitelistedPropInput = {
   localId: 'assetId',
@@ -32,6 +33,7 @@ export class KeysService {
     const pipeline = [
       ...textSearchPipeline(args.search),
       ...whitelistedProp(keysWhitelistedPropInput),
+      ...appendDeviceWhitelisted(args),
       ...filterPipeline(args.filter, KeyFilterFields),
       ...appendDeviceName(),
       ...sortPipeline(args)

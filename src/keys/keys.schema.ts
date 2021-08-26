@@ -64,6 +64,9 @@ export class Key {
 
   @Field(() => String, { nullable: true })
   deviceName?: string
+
+  @Field(() => Boolean, { nullable: true })
+  deviceWhitelisted?: boolean
 }
 
 @ObjectType()

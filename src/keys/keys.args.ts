@@ -3,6 +3,13 @@ import { IsBoolean, IsOptional, IsString, ValidateNested } from 'class-validator
 import { IsBlockchainAddress, IsBlockchainTxHash } from '../common/common.decorators'
 import { CommonIndexArgs } from '../common/common.args'
 
+const deviceWhitelistedDescription = `\
+Filter keys by supplier device whitelist. For example, if set to true, this will\
+return only keys for devices that are whitelisted by their suppliers. If set to false,\
+it will return only keys for devices that are not whitelisted by their suppliers.\
+If not given, it's not filtered at all.\
+`
+
 @InputType()
 export class KeysFilter {
   @Field({ nullable: true })
@@ -29,6 +36,11 @@ export class KeysFilter {
   @IsBoolean()
   @IsOptional()
   burned?: boolean
+
+  @Field({ nullable: true, description: deviceWhitelistedDescription })
+  @IsBoolean()
+  @IsOptional()
+  deviceWhitelisted?: boolean
 }
 
 @ArgsType()
@@ -50,5 +62,6 @@ export const KeyFilterFields = Object.freeze([
   'owner',
   'name',
   'device',
-  'burned'
+  'burned',
+  'deviceWhitelisted'
 ])
